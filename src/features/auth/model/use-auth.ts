@@ -2,7 +2,7 @@
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { authKeys, getMe, logout, type Role } from "../api/auth-api";
+import { authKeys, getMe, login, logout, type Role } from "../api/auth-api";
 
 export const ROLE_LABEL: Record<Role, string> = {
   CUSTOMER: "고객",
@@ -28,6 +28,19 @@ export function useLogout() {
     onSettled: () => {
       queryClient.clear();
       router.replace("/");
+    },
+  });
+}
+
+export function useLogin() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: login,
+    // 로그인 응답에 내 정보가 들어 있으니 다시 묻지 않고 그대로 넣어 둔다
+    onSuccess: ({ id, userId, role }) => {
+      queryClient.clear();
+      queryClient.setQueryData(authKeys.me(), { id, userId, role });
     },
   });
 }
