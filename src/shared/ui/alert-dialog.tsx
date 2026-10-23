@@ -4,11 +4,12 @@ import type { ReactNode } from "react";
 import { Button } from "./button";
 import { Dialog } from "./dialog";
 
-type AlertKind = "warning" | "success" | "confirm";
+type AlertKind = "warning" | "success" | "notice" | "confirm";
 
 const TITLE_CLASS: Record<AlertKind, string> = {
   warning: "text-danger",
   success: "text-success",
+  notice: "text-ink",
   confirm: "text-ink",
 };
 
@@ -23,7 +24,7 @@ interface AlertDialogProps {
   confirmLabel?: string;
 }
 
-// 관리자 화면의 알림 창. 경고·성공은 [확인] 하나, 확인 요청은 [취소] [삭제]
+// 관리자 화면의 알림 창. 경고·성공·안내는 [확인] 하나, 확인 요청은 [취소] [삭제]
 export function AlertDialog({
   open,
   kind,
