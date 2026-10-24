@@ -1,29 +1,11 @@
 import type { Page } from "@playwright/test";
-import { expect, test } from "./fixtures";
-
-// 로컬 첫 관리자 계정. DB 에 다른 비밀번호로 만들어져 있으면 E2E_PASSWORD 로 넘긴다
-const USER_ID = process.env.E2E_USER_ID ?? "admin";
-const PASSWORD = process.env.E2E_PASSWORD ?? "1234";
+import { expect, login, test, USER_ID } from "./fixtures";
 
 const headerButton = (page: Page) =>
   page
     .getByRole("banner")
     .getByRole("link", { name: "로그인" })
     .or(page.getByRole("banner").getByRole("button", { name: "로그아웃" }));
-
-async function login(page: Page, path = "/login") {
-  await page.goto(path);
-  await page.getByLabel("아이디").fill(USER_ID);
-  await page.getByLabel("비밀번호", { exact: true }).fill(PASSWORD);
-  await page.getByRole("button", { name: "로그인" }).click();
-  // 처음 받은 비밀번호면 안내 창이 뜬다. 닫으면 이동한다
-  const notice = page.getByRole("dialog", { name: "비밀번호 변경 권장" });
-  if (await notice.isVisible({ timeout: 1500 }).catch(() => false)) {
-    await notice.getByRole("button", { name: "확인" }).click();
-  }
-  // 이동이 끝나야 쿠키가 저장된 것이다. 그 전에 다른 화면으로 가면 로그인 요청이 끊긴다
-  await page.waitForURL((url) => url.pathname !== "/login");
-}
 
 test("로그인 전 쇼핑몰 머리글은 [로그인 / 회원가입]", async ({ page }) => {
   await page.goto("/product/new");

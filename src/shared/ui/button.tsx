@@ -7,8 +7,9 @@ const VARIANT = {
   danger: "bg-danger text-white hover:bg-danger/90",
 };
 
-// sm 은 관리자 화면(높이 32, 모서리 2), lg 는 쇼핑몰 큰 버튼
+// xs 는 관리자 표 안(높이 24), sm 은 관리자 화면(높이 32, 모서리 2), lg 는 쇼핑몰 큰 버튼
 const SIZE = {
+  xs: "h-6 rounded-[2px] px-2 text-xs",
   sm: "h-8 rounded-[2px] px-3 text-[13px]",
   md: "h-9 rounded-md px-4 text-sm",
   lg: "h-14 rounded-xl px-6 text-base font-bold",
