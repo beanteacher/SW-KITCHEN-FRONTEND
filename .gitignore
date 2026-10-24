@@ -11,3 +11,6 @@ next-env.d.ts
 .idea
 test-results
 playwright-report
+# 도구가 만드는 개인 설정 (Claude Code·headroom, Serena)
+.claude/
+.serena/
