@@ -73,7 +73,8 @@ export function LoginForm() {
 
   return (
     <>
-      <form onSubmit={handleSubmit(onSubmit)} noValidate>
+      {/* 화면 코드가 뜨기 전에 눌려도 아이디·비밀번호가 주소창(GET)에 붙지 않게 POST 로 둔다 */}
+      <form method="post" onSubmit={handleSubmit(onSubmit)} noValidate>
         <div className="mb-3">
           <FieldBox invalid={Boolean(errors.userId)}>
             <input

@@ -7,15 +7,15 @@ describe("로그인 뒤 갈 곳", () => {
   });
 
   it("주소가 없으면 담당자·관리자는 관리 화면, 고객은 쇼핑몰로 간다", () => {
-    expect(getAfterLoginPath(null, "STAFF")).toBe("/admin");
-    expect(getAfterLoginPath(null, "ADMIN")).toBe("/admin");
-    expect(getAfterLoginPath("", "CUSTOMER")).toBe("/");
+    expect(getAfterLoginPath(null, "STAFF")).toBe("/admin/product");
+    expect(getAfterLoginPath(null, "ADMIN")).toBe("/admin/product");
+    expect(getAfterLoginPath("", "CUSTOMER")).toBe("/product/new");
   });
 
   it("바깥 사이트 주소는 무시한다", () => {
-    expect(getAfterLoginPath("https://evil.example", "STAFF")).toBe("/admin");
-    expect(getAfterLoginPath("//evil.example", "STAFF")).toBe("/admin");
-    expect(getAfterLoginPath("/\\evil.example", "STAFF")).toBe("/admin");
-    expect(getAfterLoginPath("javascript:alert(1)", "CUSTOMER")).toBe("/");
+    expect(getAfterLoginPath("https://evil.example", "STAFF")).toBe("/admin/product");
+    expect(getAfterLoginPath("//evil.example", "STAFF")).toBe("/admin/product");
+    expect(getAfterLoginPath("/\\evil.example", "STAFF")).toBe("/admin/product");
+    expect(getAfterLoginPath("javascript:alert(1)", "CUSTOMER")).toBe("/product/new");
   });
 });

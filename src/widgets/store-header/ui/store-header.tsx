@@ -1,6 +1,7 @@
 import { Search } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
+import { HeaderAuth } from "./header-auth";
 import { StoreNav, StoreNavWithPath } from "./store-nav";
 
 // 메뉴 줄 → 로고 줄 → 검색창 줄. 화면 전체 너비에 좌우 16px 만 띄운다
@@ -30,13 +31,7 @@ export function StoreHeader() {
             </svg>
             장바구니
           </Link>
-          <Link
-            href="/login"
-            className="ml-1 flex h-6 items-center rounded-[4px] border border-white/80 px-1.5 text-[11px] font-medium text-white/80 xl:text-[13px]"
-          >
-            <span className="hidden xl:inline">로그인 / 회원가입</span>
-            <span className="xl:hidden">로그인</span>
-          </Link>
+          <HeaderAuth />
         </div>
       </div>
       <div className="px-4 pb-3">

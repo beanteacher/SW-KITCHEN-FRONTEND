@@ -24,10 +24,10 @@ export function useLogout() {
 
   return useMutation({
     mutationFn: logout,
-    // 실패해도 화면 쪽 정보는 지우고 쇼핑몰로 보낸다
+    // 실패해도 화면 쪽 정보는 지우고 쇼핑몰로 보낸다. / 는 다시 넘겨주기만 하므로 첫 화면으로 바로 간다
     onSettled: () => {
       queryClient.clear();
-      router.replace("/");
+      router.replace("/product/new");
     },
   });
 }
