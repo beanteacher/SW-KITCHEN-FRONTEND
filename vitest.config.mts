@@ -9,5 +9,7 @@ export default defineConfig({
   },
   test: {
     environment: "node",
+    // e2e/ 는 Playwright 가 돌린다
+    exclude: ["e2e/**", "node_modules/**"],
   },
 });

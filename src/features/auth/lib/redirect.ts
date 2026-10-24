@@ -10,5 +10,6 @@ export function getAfterLoginPath(redirect: string | null, role: Role) {
   ) {
     return redirect;
   }
-  return role === "CUSTOMER" ? "/" : "/admin";
+  // / 와 /admin 은 다시 넘겨주기만 하므로 처음부터 첫 화면으로 보내 이동을 한 번으로 줄인다
+  return role === "CUSTOMER" ? "/product/new" : "/admin/product";
 }

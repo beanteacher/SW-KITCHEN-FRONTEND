@@ -30,7 +30,15 @@ function AdminContent({ children }: { children: ReactNode }) {
   const { data: me, error, isPending, refetch } = useMe();
 
   // 화면에서 막는 건 안내용이고, 실제로 막는 건 API 서버다
-  if (isPending) return <StatusView message="불러오는 중…" />;
+  // 확인하는 동안에도 화면 내용은 숨긴 채 그려 둔다. 안 그리면 Next 가 그 화면을 빼고 검사해 경고를 띄운다
+  if (isPending) {
+    return (
+      <>
+        <StatusView message="불러오는 중…" />
+        <div hidden>{children}</div>
+      </>
+    );
+  }
 
   if (error) {
     const unauthorized = error instanceof ApiError && error.status === 401;
