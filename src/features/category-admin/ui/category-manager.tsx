@@ -5,7 +5,7 @@ import { useState } from "react";
 import type { AdminCategory } from "@/entities/category";
 import { ApiError, toApiError } from "@/shared/api";
 import { toast } from "@/shared/lib";
-import { AlertDialog, Button, PageTitle, StatusView } from "@/shared/ui";
+import { AlertDialog, ErrorView, PageTitle, StatusView } from "@/shared/ui";
 import { getDeleteBlockReason, moveCategory } from "../lib/category-rules";
 import {
   useAdminCategories,
@@ -13,6 +13,7 @@ import {
   useDeleteCategory,
 } from "../model/use-category-admin";
 import { CategoryPanel } from "./category-panel";
+import { TableFrame } from "./table-cell";
 
 interface AlertState {
   kind: "warning" | "success" | "confirm";
@@ -24,7 +25,7 @@ interface AlertState {
 function Header() {
   return (
     <>
-      <div className="mb-3 border-b border-[#d5d9de] pb-3">
+      <div className="mb-3 border-b border-admin-line pb-3">
         <PageTitle title="분류 관리" variant="admin" />
       </div>
       <p className="mb-4 leading-5 text-gray-600">
@@ -58,12 +59,9 @@ export function CategoryManager() {
 
   // 불러오지 못하면 본문 전체를 대신한다
   if (isError) {
-    const retryButton = (
-      <Button size="sm" variant="outline" onClick={() => refetch()}>
-        다시 시도
-      </Button>
+    return (
+      <ErrorView message="분류를 불러오지 못했습니다." onRetry={() => refetch()} variant="admin" />
     );
-    return <StatusView message="분류를 불러오지 못했습니다." action={retryButton} />;
   }
 
   // 주소의 대분류가 없거나 지워졌으면 첫 대분류를 고른다. 첫 대분류를 추가하면 그게 골라진다
@@ -150,9 +148,9 @@ export function CategoryManager() {
         ) : (
           <section aria-label="중분류">
             <h2 className="mb-2 text-sm font-bold">중분류</h2>
-            <div className="border border-t-2 border-[#d5d9de] border-t-ink bg-white py-[60px] text-center text-gray-500">
+            <TableFrame className="py-[60px] text-center text-gray-500">
               대분류를 먼저 추가하세요.
-            </div>
+            </TableFrame>
           </section>
         )}
       </div>

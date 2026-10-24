@@ -86,7 +86,7 @@ export function CategoryInputRow({
   const busy = disabled || isSubmitting;
 
   return (
-    <tr className={cn(editing ? selected && "bg-[#eef3fc]" : "bg-[#fafbfc]")}>
+    <tr className={cn(editing ? selected && "bg-picked" : "bg-row-hover")}>
       <Td>{order}</Td>
       <Td className="text-left">
         <Input

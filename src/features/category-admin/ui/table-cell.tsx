@@ -1,12 +1,22 @@
 import type { ComponentProps } from "react";
 import { cn } from "@/shared/lib";
 
+// 분류 표의 틀. 위는 검정 굵은 선, 나머지는 회색 선
+export function TableFrame({ className, ...props }: ComponentProps<"div">) {
+  return (
+    <div
+      className={cn("border border-t-2 border-admin-line border-t-ink bg-white", className)}
+      {...props}
+    />
+  );
+}
+
 // 분류 표의 칸. 칸마다 선이 있는 촘촘한 관리자 표 모양이고 기본은 가운데 정렬이다
 export function Th({ className, ...props }: ComponentProps<"th">) {
   return (
     <th
       className={cn(
-        "h-[34px] border-r border-b border-[#d5d9de] bg-[#f4f5f7] px-2 text-xs font-semibold whitespace-nowrap last:border-r-0",
+        "h-[34px] border-r border-b border-admin-line bg-[#f4f5f7] px-2 text-xs font-semibold whitespace-nowrap last:border-r-0",
         className,
       )}
       {...props}

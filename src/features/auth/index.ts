@@ -1,3 +1,4 @@
-export { authKeys, getMe, type Me, type Role } from "./api/auth-api";
+export { authKeys, getMe } from "./api/auth-api";
+export type { Me, Role } from "./model/types";
 export { ROLE_LABEL, useLogin, useLogout, useMe } from "./model/use-auth";
 export { LoginForm } from "./ui/login-form";

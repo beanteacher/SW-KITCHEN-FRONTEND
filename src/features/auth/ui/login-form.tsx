@@ -22,7 +22,7 @@ function FieldBox({ invalid, children }: { invalid: boolean; children: ReactNode
       className={cn(
         "flex h-9 rounded-[4px] border",
         // 오류가 있으면 초점이 있어도 빨간 테두리를 그대로 둔다
-        invalid ? "border-[#f31110]" : "border-[#e0e0e0] focus-within:border-black",
+        invalid ? "border-store-danger" : "border-[#e0e0e0] focus-within:border-black",
       )}
     >
       {children}
@@ -31,10 +31,10 @@ function FieldBox({ invalid, children }: { invalid: boolean; children: ReactNode
 }
 
 const INPUT_CLASS =
-  "h-full min-w-0 flex-1 rounded-[4px] bg-transparent px-2 text-sm outline-none placeholder:text-[#8a8a8a]";
+  "h-full min-w-0 flex-1 rounded-[4px] bg-transparent px-2 text-sm outline-none placeholder:text-placeholder";
 
 function FieldMessage({ children }: { children: ReactNode }) {
-  return <p className="mx-0.5 mt-1.5 text-[11px] leading-[14px] text-[#f31110]">{children}</p>;
+  return <p className="mx-0.5 mt-1.5 text-[11px] leading-[14px] text-store-danger">{children}</p>;
 }
 
 export function LoginForm() {
@@ -104,7 +104,7 @@ export function LoginForm() {
               type="button"
               onClick={() => setShowPassword((shown) => !shown)}
               aria-label={showPassword ? "비밀번호 숨기기" : "비밀번호 보기"}
-              className="grid w-9 place-items-center text-[#8a8a8a]"
+              className="grid w-9 place-items-center text-placeholder"
             >
               {/* 아이콘은 지금 상태를 보여준다: 가려져 있으면 감은 눈, 보이면 뜬 눈 (무신사와 같음) */}
               {showPassword ? (
@@ -117,7 +117,7 @@ export function LoginForm() {
           {errors.password && <FieldMessage>{errors.password.message}</FieldMessage>}
         </div>
         {error && (
-          <p role="alert" className="mx-0.5 mt-1 text-[13px] leading-[18px] text-[#f31110]">
+          <p role="alert" className="mx-0.5 mt-1 text-[13px] leading-[18px] text-store-danger">
             {failMessage}
           </p>
         )}

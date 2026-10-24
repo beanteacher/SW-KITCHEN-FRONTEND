@@ -1,14 +1,15 @@
 "use client";
 
 import type { MouseEvent } from "react";
-import type { AdminCategory, UpdateCategoryRequest } from "@/entities/category";
+import type { AdminCategory } from "@/entities/category";
 import { cn } from "@/shared/lib";
 import { Button } from "@/shared/ui";
 import { getCodePrefix } from "../lib/category-rules";
 import type { CategoryFormValues } from "../model/category-schema";
+import type { UpdateCategoryRequest } from "../model/types";
 import { useCreateCategory, useUpdateCategory } from "../model/use-category-admin";
 import { CategoryInputRow } from "./category-input-row";
-import { Td, Th } from "./table-cell";
+import { TableFrame, Td, Th } from "./table-cell";
 
 interface CategoryPanelProps {
   // 없으면 대분류 표, 있으면 그 대분류 아래 중분류 표
@@ -25,7 +26,7 @@ interface CategoryPanelProps {
 }
 
 function ProductCount({ count }: { count: number }) {
-  if (count === 0) return <span className="text-[#b5bcc4]">0</span>;
+  if (count === 0) return <span className="text-faint">0</span>;
   return count.toLocaleString();
 }
 
@@ -102,7 +103,7 @@ export function CategoryPanel({
             : "약어는 대분류끼리 겹치면 안 됨"}
         </small>
       </h2>
-      <div className="border border-t-2 border-[#d5d9de] border-t-ink bg-white">
+      <TableFrame>
         <table className="w-full table-fixed border-collapse leading-[18px]">
           <colgroup>
             <col className="w-[72px]" />
@@ -161,8 +162,8 @@ export function CategoryPanel({
                   key={category.id}
                   onClick={parent ? undefined : handleRowClick(category.id)}
                   className={cn(
-                    !parent && "cursor-pointer hover:bg-[#fafbfc]",
-                    selected && "bg-[#eef3fc] hover:bg-[#eef3fc]",
+                    !parent && "cursor-pointer hover:bg-row-hover",
+                    selected && "bg-picked hover:bg-picked",
                   )}
                 >
                   <Td>{moveButtons(category, index)}</Td>
@@ -180,13 +181,13 @@ export function CategoryPanel({
                       </button>
                     )}
                     {!parent && (
-                      <span className="ml-1 text-[#b5bcc4]">({category.children.length})</span>
+                      <span className="ml-1 text-faint">({category.children.length})</span>
                     )}
                   </Td>
                   <Td className="font-mono text-xs">
                     {category.abbr}
                     {parent && (
-                      <span className="text-[#b5bcc4]"> · {getCodePrefix(parent, category)}</span>
+                      <span className="text-faint"> · {getCodePrefix(parent, category)}</span>
                     )}
                   </Td>
                   <Td className="text-right tabular-nums">
@@ -216,13 +217,13 @@ export function CategoryPanel({
             })}
             <CategoryInputRow
               siblings={categories}
-              order={<span className="text-[#b5bcc4]">신규</span>}
+              order={<span className="text-faint">신규</span>}
               disabled={isEditing}
               onSubmit={handleCreate}
             />
           </tbody>
         </table>
-      </div>
+      </TableFrame>
     </section>
   );
 }

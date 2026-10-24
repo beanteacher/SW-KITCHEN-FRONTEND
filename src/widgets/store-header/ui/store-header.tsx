@@ -53,7 +53,7 @@ export function StoreHeader() {
             title="검색어를 입력해 주세요."
             aria-label="검색어"
             placeholder="제품명, 상품 코드, 제조사로 검색"
-            className="h-9 w-full rounded-[4px] bg-white pr-10 pl-2 text-sm text-black outline-none placeholder:text-[#8a8a8a] focus-visible:ring-2 focus-visible:ring-white/40"
+            className="h-9 w-full rounded-[4px] bg-white pr-10 pl-2 text-sm text-black outline-none placeholder:text-placeholder focus-visible:ring-2 focus-visible:ring-white/40"
           />
           <button
             type="submit"

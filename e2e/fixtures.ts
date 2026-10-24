@@ -22,13 +22,16 @@ export async function login(page: Page, path = "/login") {
 const EXPECTED = [/Failed to load resource: the server responded with a status of 401/];
 
 // 모든 테스트에서 브라우저 콘솔 오류·화면 오류가 하나라도 나오면 실패시킨다 (Next 개발 오버레이 오류 포함)
-export const test = base.extend<{ consoleErrors: string[] }>({
+// 일부러 서버 오류를 내는 테스트는 test.use({ expectedConsoleErrors: [...] }) 로 그 오류만 뺀다
+export const test = base.extend<{ consoleErrors: string[]; expectedConsoleErrors: RegExp[] }>({
+  expectedConsoleErrors: [[], { option: true }],
   consoleErrors: [
-    async ({ page }, use) => {
+    async ({ page, expectedConsoleErrors }, use) => {
+      const expected = [...EXPECTED, ...expectedConsoleErrors];
       const errors: string[] = [];
       page.on("console", (message) => {
         if (message.type() !== "error") return;
-        if (EXPECTED.some((pattern) => pattern.test(message.text()))) return;
+        if (expected.some((pattern) => pattern.test(message.text()))) return;
         errors.push(`${new URL(page.url()).pathname}: ${message.text().split("\n")[0]}`);
       });
       page.on("pageerror", (error) =>

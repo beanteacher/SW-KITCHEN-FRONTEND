@@ -1,13 +1,2 @@
-export {
-  categoryKeys,
-  changeCategoryOrder,
-  createCategory,
-  deleteCategory,
-  getAdminCategories,
-  updateCategory,
-  type AdminCategory,
-  type Category,
-  type ChangeCategoryOrderRequest,
-  type CreateCategoryRequest,
-  type UpdateCategoryRequest,
-} from "./api/category-api";
+export { categoryKeys, getAdminCategories } from "./api/category-api";
+export type { AdminCategory } from "./model/types";

@@ -1,15 +1,14 @@
 "use client";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { categoryKeys, getAdminCategories } from "@/entities/category";
 import {
-  categoryKeys,
   changeCategoryOrder,
   createCategory,
   deleteCategory,
-  getAdminCategories,
   updateCategory,
-  type UpdateCategoryRequest,
-} from "@/entities/category";
+} from "../api/category-admin-api";
+import type { UpdateCategoryRequest } from "./types";
 
 export function useAdminCategories() {
   return useQuery({

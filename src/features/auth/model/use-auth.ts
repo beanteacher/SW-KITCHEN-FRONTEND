@@ -2,7 +2,8 @@
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { authKeys, getMe, login, logout, type Role } from "../api/auth-api";
+import { authKeys, getMe, login, logout } from "../api/auth-api";
+import type { Role } from "./types";
 
 export const ROLE_LABEL: Record<Role, string> = {
   CUSTOMER: "고객",

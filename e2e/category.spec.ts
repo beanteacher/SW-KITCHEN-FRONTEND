@@ -123,3 +123,33 @@ test("분류를 추가·수정·순서 바꾸기·삭제하고, 막히는 경우
   await closeAlert(page, "삭제 완료");
   await expect(row(page, "중분류", `${mid}2`)).toHaveCount(0);
 });
+
+test.describe("불러오기 실패", () => {
+  // 일부러 낸 500 을 브라우저가 콘솔 오류로 남긴다
+  test.use({ expectedConsoleErrors: [/status of 500/] });
+
+  test("분류를 불러오지 못하면 [다시 시도] 로 다시 읽는다", async ({ page }) => {
+    // 앞의 새로고침이 다 끝난 뒤에 다시 새로고침한다. 도중에 하면 브라우저가 끊긴 요청을 콘솔 오류로 남긴다
+    await expect(page.getByRole("region", { name: "대분류" })).toBeVisible();
+
+    // [다시 시도] 를 누르기 전까지는 서버 오류로 바꾼다 (화면이 한 번 더 시도하는 것까지 실패시킨다)
+    let failing = true;
+    await page.route("**/api/v1/admin/category", (route) =>
+      failing
+        ? route.fulfill({
+            status: 500,
+            json: { success: false, code: "INTERNAL_ERROR", message: "서버 오류" },
+          })
+        : route.continue(),
+    );
+
+    await page.reload();
+    await expect(page.getByText("분류를 불러오지 못했습니다.")).toBeVisible();
+
+    failing = false;
+    await page.getByRole("button", { name: "다시 시도" }).click();
+
+    await expect(page.getByRole("heading", { name: "분류 관리" })).toBeVisible();
+    await expect(page.getByRole("region", { name: "대분류" })).toBeVisible();
+  });
+});
