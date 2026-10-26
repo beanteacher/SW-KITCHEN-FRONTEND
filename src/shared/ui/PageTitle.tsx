@@ -6,11 +6,11 @@ const VARIANT_CLASS = {
   admin: "text-lg",
 };
 
-interface PageTitleProps {
+interface Props {
   title: string;
   variant?: keyof typeof VARIANT_CLASS;
 }
 
-export function PageTitle({ title, variant = "store" }: PageTitleProps) {
+export default function PageTitle({ title, variant = "store" }: Props) {
   return <h1 className={cn("font-bold", VARIANT_CLASS[variant])}>{title}</h1>;
 }

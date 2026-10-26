@@ -15,18 +15,18 @@ const SIZE = {
   lg: "h-14 rounded-xl px-6 text-base font-bold",
 };
 
-interface ButtonProps extends ComponentProps<"button"> {
+interface Props extends ComponentProps<"button"> {
   variant?: keyof typeof VARIANT;
   size?: keyof typeof SIZE;
 }
 
-export function Button({
+export default function Button({
   variant = "primary",
   size = "md",
   type = "button",
   className,
   ...props
-}: ButtonProps) {
+}: Props) {
   return (
     <button
       type={type}

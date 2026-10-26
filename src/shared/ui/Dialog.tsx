@@ -3,7 +3,7 @@
 import { useEffect, useId, useRef, type ReactNode } from "react";
 import { cn } from "@/shared/lib";
 
-interface DialogProps {
+interface Props {
   open: boolean;
   onClose: () => void;
   title: string;
@@ -13,7 +13,7 @@ interface DialogProps {
 }
 
 // 브라우저 기본 <dialog> 를 써서 포커스 가두기, Esc 닫기, 닫은 뒤 원래 버튼으로 포커스 돌려주기를 맡긴다
-export function Dialog({ open, onClose, title, titleClassName, children, actions }: DialogProps) {
+export default function Dialog({ open, onClose, title, titleClassName, children, actions }: Props) {
   const ref = useRef<HTMLDialogElement>(null);
   const titleId = useId();
 

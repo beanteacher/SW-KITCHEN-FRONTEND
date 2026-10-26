@@ -1,4 +1,5 @@
 import { useId, type ReactNode } from "react";
+import FieldError from "./FieldError";
 
 interface FieldControlProps {
   id: string;
@@ -6,7 +7,7 @@ interface FieldControlProps {
   "aria-describedby": string | undefined;
 }
 
-interface FormFieldProps {
+interface Props {
   label: string;
   required?: boolean;
   error?: string;
@@ -15,7 +16,7 @@ interface FormFieldProps {
 }
 
 // 관리자 폼 한 줄: 왼쪽 회색 이름 칸 + 오른쪽 입력칸, 오류는 입력칸 아래 빨간 글씨
-export function FormField({ label, required, error, hint, children }: FormFieldProps) {
+export default function FormField({ label, required, error, hint, children }: Props) {
   const id = useId();
   const messageId = `${id}-message`;
   const message = error ?? hint;
@@ -44,13 +45,5 @@ export function FormField({ label, required, error, hint, children }: FormFieldP
         )}
       </div>
     </div>
-  );
-}
-
-export function FieldError({ id, children }: { id?: string; children: ReactNode }) {
-  return (
-    <p id={id} role="alert" className="mt-1 text-xs text-danger">
-      {children}
-    </p>
   );
 }

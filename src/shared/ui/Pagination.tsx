@@ -9,7 +9,7 @@ const SIZE = {
   sm: "size-7 text-xs",
 };
 
-interface PaginationProps {
+interface Props {
   page: number;
   totalPages: number;
   // 페이지 번호는 주소에 남긴다. 링크로 옮기면 Next 가 맨 위로 올려 준다
@@ -17,7 +17,7 @@ interface PaginationProps {
   size?: keyof typeof SIZE;
 }
 
-export function Pagination({ page, totalPages, getHref, size = "md" }: PaginationProps) {
+export default function Pagination({ page, totalPages, getHref, size = "md" }: Props) {
   if (totalPages <= 1) return null;
 
   const pages = getPageWindow(page, totalPages);

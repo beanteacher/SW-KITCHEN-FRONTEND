@@ -26,7 +26,7 @@ const SIZE = {
   },
 };
 
-interface SelectProps<V extends string | number> {
+interface Props<V extends string | number> {
   options: SelectOption<V>[];
   value: V | null;
   onChange: (value: V) => void;
@@ -53,7 +53,7 @@ function findEnabled<V extends string | number>(
 }
 
 // 브라우저 기본 select 대신 어느 기기에서나 같은 모양으로 보이는 드롭다운
-export function Select<V extends string | number>({
+export default function Select<V extends string | number>({
   options,
   value,
   onChange,
@@ -63,7 +63,7 @@ export function Select<V extends string | number>({
   id,
   className,
   ...aria
-}: SelectProps<V>) {
+}: Props<V>) {
   const [open, setOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(-1);
   const rootRef = useRef<HTMLDivElement>(null);

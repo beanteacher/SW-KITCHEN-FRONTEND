@@ -3,7 +3,7 @@
 import { cn, useToastStore } from "@/shared/lib";
 
 // 앱 전체에 한 번만 붙인다
-export function Toaster() {
+export default function Toaster() {
   const items = useToastStore((state) => state.items);
 
   return (

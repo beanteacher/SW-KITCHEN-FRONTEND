@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import { ApiError } from "@/shared/api";
-import { applyServerFieldErrors, toFormFieldPath } from "./form-errors";
+import { applyServerFieldErrors, toFormFieldPath } from "./formErrors";
 
 describe("서버 필드 오류를 폼에 붙이기", () => {
   it("배열 순번이 들어간 경로를 점 경로로 바꾼다", () => {

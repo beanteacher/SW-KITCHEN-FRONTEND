@@ -1,8 +1,8 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { Button } from "./button";
-import { Dialog } from "./dialog";
+import Button from "./Button";
+import Dialog from "./Dialog";
 
 type AlertKind = "warning" | "success" | "notice" | "confirm";
 
@@ -13,7 +13,7 @@ const TITLE_CLASS: Record<AlertKind, string> = {
   confirm: "text-ink",
 };
 
-interface AlertDialogProps {
+interface Props {
   open: boolean;
   kind: AlertKind;
   title: string;
@@ -25,7 +25,7 @@ interface AlertDialogProps {
 }
 
 // 관리자 화면의 알림 창. 경고·성공·안내는 [확인] 하나, 확인 요청은 [취소] [삭제]
-export function AlertDialog({
+export default function AlertDialog({
   open,
   kind,
   title,
@@ -33,7 +33,7 @@ export function AlertDialog({
   onClose,
   onConfirm,
   confirmLabel = "삭제",
-}: AlertDialogProps) {
+}: Props) {
   const actions =
     kind === "confirm" ? (
       <>
