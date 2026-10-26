@@ -1,28 +1,25 @@
 "use client";
 
 import type { MouseEvent } from "react";
-import type { AdminCategory } from "@/entities/category";
+import type { CategoryDto } from "@/entities/category";
 import { cn } from "@/shared/lib";
 import { Button } from "@/shared/ui";
-import { getCodePrefix } from "../lib/category-rules";
-import type { CategoryFormValues } from "../model/category-schema";
-import type { UpdateCategoryRequest } from "../model/types";
-import { useCreateCategory, useUpdateCategory } from "../model/use-category-admin";
-import { CategoryInputRow } from "./category-input-row";
-import { TableFrame, Td, Th } from "./table-cell";
+import { getCodePrefix } from "../lib/categoryRules";
+import type { CategoryPanelHandlers } from "../model/client/categoryAdminTypes";
+import type { CategorySchema } from "../model/schema/categorySchema";
+import { useCreateCategory, useEditCategory } from "../model/useCategoryAdminQueries";
+import CategoryInputRow from "./CategoryInputRow";
+import TableFrame from "./TableFrame";
+import Td from "./Td";
+import Th from "./Th";
 
-interface CategoryPanelProps {
+interface Props extends CategoryPanelHandlers {
   // 없으면 대분류 표, 있으면 그 대분류 아래 중분류 표
-  parent: AdminCategory | null;
-  categories: AdminCategory[];
+  parent: CategoryDto.AdminTree | null;
+  categories: CategoryDto.AdminTree[];
   selectedId?: number;
-  editingId: number | null;
-  isMoving: boolean;
   onSelect?: (id: number) => void;
-  onEdit: (id: number | null) => void;
   onMove: (id: number, direction: -1 | 1) => void;
-  onDelete: (category: AdminCategory) => void;
-  onDone: (title: string, message: string) => void;
 }
 
 function ProductCount({ count }: { count: number }) {
@@ -30,7 +27,7 @@ function ProductCount({ count }: { count: number }) {
   return count.toLocaleString();
 }
 
-export function CategoryPanel({
+export default function CategoryPanel({
   parent,
   categories,
   selectedId,
@@ -41,26 +38,27 @@ export function CategoryPanel({
   onMove,
   onDelete,
   onDone,
-}: CategoryPanelProps) {
+}: Props) {
   const { mutateAsync: create } = useCreateCategory();
-  const { mutateAsync: update } = useUpdateCategory();
+  const { mutateAsync: edit } = useEditCategory();
 
   const isEditing = editingId !== null;
   const label = parent ? "중분류" : "대분류";
 
-  const handleCreate = async (values: CategoryFormValues) => {
+  const handleCreate = async (values: CategorySchema.CreateFormValues) => {
     await create({ parentId: parent?.id ?? null, ...values });
     onDone("추가 완료", `"${values.name}" 분류가 추가되었습니다.`);
   };
 
   // 바뀐 값만 보낸다. 잠긴 약어는 칸이 막혀 있어 늘 그대로다
-  const handleUpdate = (category: AdminCategory) => async (values: CategoryFormValues) => {
-    const request: UpdateCategoryRequest = { name: values.name };
-    if (values.abbr !== category.abbr) request.abbr = values.abbr;
-    await update({ id: category.id, request });
-    onEdit(null);
-    onDone("저장 완료", "저장되었습니다.");
-  };
+  const handleEdit =
+    (category: CategoryDto.AdminTree) => async (values: CategorySchema.CreateFormValues) => {
+      const data: CategoryDto.EditForm = { name: values.name };
+      if (values.abbr !== category.abbr) data.abbr = values.abbr;
+      await edit({ id: category.id, data });
+      onEdit(null);
+      onDone("저장 완료", "저장되었습니다.");
+    };
 
   // 대분류 줄은 아무 데나 눌러도 고른다. 줄 안의 버튼·입력칸은 제 할 일만 한다
   const handleRowClick = (id: number) => (event: MouseEvent<HTMLTableRowElement>) => {
@@ -68,7 +66,7 @@ export function CategoryPanel({
     onSelect?.(id);
   };
 
-  const moveButtons = (category: AdminCategory, index: number) => (
+  const moveButtons = (category: CategoryDto.AdminTree, index: number) => (
     <div className="flex justify-center gap-0.5">
       <Button
         size="xs"
@@ -147,11 +145,11 @@ export function CategoryPanel({
                   <CategoryInputRow
                     key={category.id}
                     siblings={categories}
-                    editing={{ category, abbrLocked: category.productCount > 0 }}
+                    editing={{ category, abbrLocked: (category.productCount ?? 0) > 0 }}
                     order={moveButtons(category, index)}
-                    productCount={<ProductCount count={category.productCount} />}
+                    productCount={<ProductCount count={category.productCount ?? 0} />}
                     selected={selected}
-                    onSubmit={handleUpdate(category)}
+                    onSubmit={handleEdit(category)}
                     onCancel={() => onEdit(null)}
                   />
                 );
@@ -181,7 +179,7 @@ export function CategoryPanel({
                       </button>
                     )}
                     {!parent && (
-                      <span className="ml-1 text-faint">({category.children.length})</span>
+                      <span className="ml-1 text-faint">({category.children?.length ?? 0})</span>
                     )}
                   </Td>
                   <Td className="font-mono text-xs">
@@ -191,7 +189,7 @@ export function CategoryPanel({
                     )}
                   </Td>
                   <Td className="text-right tabular-nums">
-                    <ProductCount count={category.productCount} />
+                    <ProductCount count={category.productCount ?? 0} />
                   </Td>
                   <Td className="whitespace-nowrap">
                     <Button

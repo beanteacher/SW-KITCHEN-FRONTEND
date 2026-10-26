@@ -1,17 +1,21 @@
 import { describe, expect, it } from "vitest";
-import type { AdminCategory } from "@/entities/category";
+import type { CategoryDto } from "@/entities/category";
 import { ApiError } from "@/shared/api";
 import {
-  findDuplicateAbbr,
   getCodePrefix,
   getDeleteBlockReason,
+  getDuplicateAbbrMessage,
   getServerFieldErrors,
   moveCategory,
   normalizeAbbr,
-  validateCategory,
-} from "./category-rules";
+} from "./categoryRules";
 
-function category(id: number, abbr: string, productCount = 0, children: AdminCategory[] = []) {
+function category(
+  id: number,
+  abbr: string,
+  productCount = 0,
+  children: CategoryDto.AdminTree[] = [],
+) {
   return { id, name: `분류${id}`, abbr, sortOrder: id, productCount, children };
 }
 
@@ -27,35 +31,13 @@ describe("약어 칸", () => {
 describe("약어 겹침", () => {
   const siblings = [category(1, "RF"), category(2, "WS")];
 
-  it("형제 중 같은 약어를 가진 분류를 찾는다", () => {
-    expect(findDuplicateAbbr(siblings, "WS")?.id).toBe(2);
-    expect(findDuplicateAbbr(siblings, "CK")).toBeUndefined();
+  it("형제 중 같은 약어가 있으면 그 분류 이름으로 문구를 준다", () => {
+    expect(getDuplicateAbbrMessage(siblings, "WS")).toBe('"분류2"과 겹침');
+    expect(getDuplicateAbbrMessage(siblings, "CK")).toBeNull();
   });
 
   it("고치는 중인 자기 자신과는 겹친다고 보지 않는다", () => {
-    expect(findDuplicateAbbr(siblings, "RF", 1)).toBeUndefined();
-  });
-});
-
-describe("추가·수정 전 검사", () => {
-  const siblings = [category(1, "RF"), category(2, "WS")];
-
-  it("맞는 이름과 겹치지 않는 약어는 오류가 없다", () => {
-    expect(validateCategory({ name: "조리", abbr: "CK" }, siblings)).toEqual({});
-  });
-
-  it("빈 이름과 형제와 겹치는 약어는 칸마다 오류를 준다", () => {
-    expect(validateCategory({ name: " ", abbr: "WS" }, siblings)).toEqual({
-      name: "이름을 입력해 주세요.",
-      abbr: '"분류2"과 겹침',
-    });
-  });
-
-  it("고치는 중인 자기 약어는 겹침이 아니고, 잠긴 약어는 검사하지 않는다", () => {
-    expect(validateCategory({ name: "냉장", abbr: "RF" }, siblings, { selfId: 1 })).toEqual({});
-    expect(validateCategory({ name: "냉장", abbr: "WS" }, siblings, { abbrLocked: true })).toEqual(
-      {},
-    );
+    expect(getDuplicateAbbrMessage(siblings, "RF", 1)).toBeNull();
   });
 });
 

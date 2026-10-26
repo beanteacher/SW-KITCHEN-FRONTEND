@@ -1,1 +1,1 @@
-export { CategoryManager } from "./ui/category-manager";
+export { default as CategoryManager } from "./ui/CategoryManager";
