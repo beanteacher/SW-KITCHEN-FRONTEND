@@ -1,6 +1,7 @@
 export { AlertDialog } from "./alert-dialog";
 export { Button } from "./button";
 export { Dialog } from "./dialog";
+export { ErrorView } from "./error-view";
 export { FieldError, FormField } from "./form-field";
 export { Checkbox, Input, Radio, Textarea } from "./input";
 export { PageTitle } from "./page-title";

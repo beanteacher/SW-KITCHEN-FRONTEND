@@ -6,7 +6,7 @@ import { Suspense, useEffect, type ReactNode } from "react";
 import { ROLE_LABEL, useLogout, useMe } from "@/features/auth";
 import { ApiError, setAuthFailureHandler } from "@/shared/api";
 import { toast } from "@/shared/lib";
-import { Button, StatusView } from "@/shared/ui";
+import { ErrorView, StatusView } from "@/shared/ui";
 import { AdminMenu, AdminMenuWithPath } from "./admin-sidebar";
 
 // 로그인이 풀리면 지금 주소를 붙여 로그인 화면으로 보낸다
@@ -43,12 +43,9 @@ function AdminContent({ children }: { children: ReactNode }) {
   if (error) {
     const unauthorized = error instanceof ApiError && error.status === 401;
     if (unauthorized) return <StatusView message="로그인 화면으로 이동합니다…" />;
-    const retryButton = (
-      <Button size="sm" variant="outline" onClick={() => refetch()}>
-        다시 시도
-      </Button>
+    return (
+      <ErrorView message="정보를 불러오지 못했습니다." onRetry={() => refetch()} variant="admin" />
     );
-    return <StatusView message="정보를 불러오지 못했습니다." action={retryButton} />;
   }
 
   if (me.role === "CUSTOMER") {
