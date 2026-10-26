@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { cn } from "@/shared/lib";
 
 const MENU = [
@@ -9,7 +8,11 @@ const MENU = [
   { href: "/admin/category", label: "분류 관리" },
 ];
 
-export function AdminMenu({ activePath }: { activePath?: string }) {
+interface Props {
+  activePath?: string;
+}
+
+export default function AdminMenu({ activePath }: Props) {
   return (
     <nav aria-label="관리 메뉴">
       <ul className="py-2">
@@ -33,9 +36,4 @@ export function AdminMenu({ activePath }: { activePath?: string }) {
       </ul>
     </nav>
   );
-}
-
-export function AdminMenuWithPath() {
-  const pathname = usePathname();
-  return <AdminMenu activePath={pathname} />;
 }

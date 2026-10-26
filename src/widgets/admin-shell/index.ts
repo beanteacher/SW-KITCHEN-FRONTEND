@@ -1,1 +1,1 @@
-export { AdminShell } from "./ui/admin-shell";
+export { default as AdminShell } from "./ui/AdminShell";

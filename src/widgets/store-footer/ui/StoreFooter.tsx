@@ -1,5 +1,5 @@
 // ponytail: 사업자 정보는 아직 가짜 값이다. 실제 값이 정해지면 바꾼다
-export function StoreFooter() {
+export default function StoreFooter() {
   return (
     <footer className="mt-20 border-t border-[#ebebeb] bg-white text-xs leading-[1.7] text-[#666]">
       <div className="mx-auto max-w-[1440px] px-5 py-6">

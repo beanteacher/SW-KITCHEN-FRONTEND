@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { cn } from "@/shared/lib";
 
 const MENU = [
@@ -10,7 +9,11 @@ const MENU = [
 ];
 
 // 지금 화면의 메뉴는 흰색 굵게, 나머지는 옅은 흰색
-export function StoreNav({ activePath }: { activePath?: string }) {
+interface Props {
+  activePath?: string;
+}
+
+export default function StoreNav({ activePath }: Props) {
   return (
     <nav aria-label="주 메뉴" className="flex h-full items-center">
       {MENU.map((item) => {
@@ -31,9 +34,4 @@ export function StoreNav({ activePath }: { activePath?: string }) {
       })}
     </nav>
   );
-}
-
-export function StoreNavWithPath() {
-  const pathname = usePathname();
-  return <StoreNav activePath={pathname} />;
 }

@@ -1,11 +1,12 @@
 import { Search } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
-import { HeaderAuth } from "./header-auth";
-import { StoreNav, StoreNavWithPath } from "./store-nav";
+import HeaderAuth from "./HeaderAuth";
+import StoreNav from "./StoreNav";
+import StoreNavWithPath from "./StoreNavWithPath";
 
 // 메뉴 줄 → 로고 줄 → 검색창 줄. 화면 전체 너비에 좌우 16px 만 띄운다
-export function StoreHeader() {
+export default function StoreHeader() {
   return (
     <header className="bg-ink text-white">
       <div className="flex h-14 items-center justify-between pr-2.5 pl-4">

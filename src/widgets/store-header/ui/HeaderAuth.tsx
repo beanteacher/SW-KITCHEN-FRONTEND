@@ -7,7 +7,7 @@ import { useLogout, useMe } from "@/features/auth";
 const BUTTON_CLASS =
   "ml-1 flex h-6 items-center rounded-[4px] border border-white/80 px-1.5 text-[11px] font-medium text-white/80 xl:text-[13px]";
 
-export function HeaderAuth() {
+export default function HeaderAuth() {
   // 쿠키는 자바스크립트가 못 읽으므로 서버에 물어본다. 묻는 동안·실패하면 로그인 버튼을 둔다
   const { data: me } = useMe();
   const { mutate: logout, isPending } = useLogout();

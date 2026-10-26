@@ -10,7 +10,7 @@ function shouldRetry(failureCount: number, error: Error) {
   return failureCount < 1;
 }
 
-export function Providers({ children }: { children: ReactNode }) {
+export default function Providers({ children }: { children: ReactNode }) {
   const [queryClient] = useState(
     () =>
       new QueryClient({

@@ -15,7 +15,7 @@ const SAMPLES: Record<Kind, { title: string; body: string }> = {
   confirm: { title: "분류 삭제", body: '"쇼케이스" 분류를 삭제할까요?' },
 };
 
-export function AlertPreview() {
+export default function AlertPreview() {
   const [open, setOpen] = useState<Kind | null>(null);
 
   return (
