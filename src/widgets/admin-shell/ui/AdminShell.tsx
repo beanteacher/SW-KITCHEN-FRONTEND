@@ -1,0 +1,39 @@
+"use client";
+
+import Link from "next/link";
+import { Suspense, type ReactNode } from "react";
+import { useAdminAuthGuard } from "../model/useAdminAuthGuard";
+import AccountInfo from "./AccountInfo";
+import AdminContent from "./AdminContent";
+import AdminMenu from "./AdminMenu";
+import AdminMenuWithPath from "./AdminMenuWithPath";
+
+interface Props {
+  children: ReactNode;
+}
+
+// 관리 화면 틀: 검정 위 띠 56px + 왼쪽 메뉴 200px, 1024px 보다 좁으면 가로로 스크롤
+export default function AdminShell({ children }: Props) {
+  useAdminAuthGuard();
+
+  return (
+    <div className="flex min-h-screen min-w-[1024px] flex-col text-[13px]">
+      <header className="flex h-14 shrink-0 items-center justify-between bg-ink px-5 text-white">
+        <Link href="/admin" className="text-base font-bold">
+          성원종합주방 관리
+        </Link>
+        <AccountInfo />
+      </header>
+      <div className="flex flex-1">
+        <aside className="w-[200px] shrink-0 border-r border-line">
+          <Suspense fallback={<AdminMenu />}>
+            <AdminMenuWithPath />
+          </Suspense>
+        </aside>
+        <main className="min-w-0 flex-1 p-6">
+          <AdminContent>{children}</AdminContent>
+        </main>
+      </div>
+    </div>
+  );
+}

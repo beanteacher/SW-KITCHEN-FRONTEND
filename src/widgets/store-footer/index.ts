@@ -1,1 +1,1 @@
-export { StoreFooter } from "./ui/store-footer";
+export { default as StoreFooter } from "./ui/StoreFooter";

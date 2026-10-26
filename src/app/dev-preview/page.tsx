@@ -1,11 +1,11 @@
 import type { ReactNode } from "react";
 import { notFound } from "next/navigation";
-import { SalesTypeBadge, type SalesType } from "@/entities/product";
+import { SalesTypeBadge, type ProductDto } from "@/entities/product";
 import { Pagination } from "@/shared/ui";
-import { AlertPreview } from "./alert-preview";
+import AlertPreview from "./AlertPreview";
 
 // ponytail: 공용 부품 모양 확인용 임시 화면. 확인이 끝나면 이 폴더째 지운다
-const SALES_TYPES: SalesType[] = ["NEW", "STOCK", "USED"];
+const SALES_TYPES: ProductDto.SalesType[] = ["NEW", "STOCK", "USED"];
 
 function Section({ title, children }: { title: string; children: ReactNode }) {
   return (

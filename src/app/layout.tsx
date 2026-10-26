@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { Toaster } from "@/shared/ui";
-import { Providers } from "./providers";
+import Providers from "./Providers";
 import "./globals.css";
 
 // 맥·윈도우 어디서든 같은 글꼴로 보이게, 기기에 깔린 글꼴 대신 이 파일을 내려 준다

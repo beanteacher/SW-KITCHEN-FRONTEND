@@ -1,1 +1,1 @@
-export { StoreHeader } from "./ui/store-header";
+export { default as StoreHeader } from "./ui/StoreHeader";
