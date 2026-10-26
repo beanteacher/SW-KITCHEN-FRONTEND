@@ -1,2 +1,4 @@
-export { SALES_TYPE_LABEL, type SalesType } from "./model/sales-type";
-export { SalesTypeBadge } from "./ui/sales-type-badge";
+export { SALES_TYPE_LABEL } from "./config/salesTypeLabel";
+export { formatDiscount } from "./lib/formatDiscount";
+export { ProductDto } from "./model/dto/productDto";
+export { default as SalesTypeBadge } from "./ui/SalesTypeBadge";
