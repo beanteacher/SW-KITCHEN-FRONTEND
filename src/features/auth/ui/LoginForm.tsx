@@ -9,8 +9,8 @@ import { ApiError } from "@/shared/api";
 import { cn } from "@/shared/lib";
 import { AlertDialog } from "@/shared/ui";
 import { getAfterLoginPath } from "../lib/redirect";
-import { loginSchema, type LoginFormValues } from "../model/login-schema";
-import { useLogin } from "../model/use-auth";
+import { AuthSchema } from "../model/schema/authSchema";
+import { useLogin } from "../model/useAuthQueries";
 
 const LOGIN_FAILED_MESSAGE = "아이디 또는 비밀번호가 맞지 않습니다.";
 const FALLBACK_MESSAGE = "로그인하지 못했습니다. 잠시 뒤 다시 시도해 주세요.";
@@ -37,7 +37,7 @@ function FieldMessage({ children }: { children: ReactNode }) {
   return <p className="mx-0.5 mt-1.5 text-[11px] leading-[14px] text-store-danger">{children}</p>;
 }
 
-export function LoginForm() {
+export default function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { mutate: login, isPending, error } = useLogin();
@@ -50,9 +50,9 @@ export function LoginForm() {
     handleSubmit,
     resetField,
     formState: { errors },
-  } = useForm<LoginFormValues>({ resolver: zodResolver(loginSchema) });
+  } = useForm<AuthSchema.LoginFormValues>({ resolver: zodResolver(AuthSchema.LoginSchema) });
 
-  const onSubmit = (values: LoginFormValues) => {
+  const onSubmit = (values: AuthSchema.LoginFormValues) => {
     login(values, {
       onSuccess: (result) => {
         const path = getAfterLoginPath(searchParams.get("redirect"), result.role);

@@ -67,7 +67,7 @@ function AccountInfo() {
   const { data: me } = useMe();
   const { mutate: logout, isPending } = useLogout();
 
-  if (!me || me.role === "CUSTOMER") return null;
+  if (!me?.role || me.role === "CUSTOMER") return null;
 
   return (
     <div className="flex items-center gap-3 text-[13px]">

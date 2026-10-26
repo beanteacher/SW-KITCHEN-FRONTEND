@@ -1,13 +1,15 @@
 import { describe, expect, it } from "vitest";
-import { loginSchema } from "./login-schema";
+import { AuthSchema } from "./authSchema";
 
 describe("로그인 입력 검사", () => {
   it("아이디와 비밀번호가 있으면 형식과 상관없이 통과한다", () => {
-    expect(loginSchema.safeParse({ userId: "Admin!", password: "1" }).success).toBe(true);
+    expect(AuthSchema.LoginSchema.safeParse({ userId: "Admin!", password: "1" }).success).toBe(
+      true,
+    );
   });
 
   it("빈 칸이면 칸마다 안내 문구를 준다", () => {
-    const result = loginSchema.safeParse({ userId: "  ", password: "" });
+    const result = AuthSchema.LoginSchema.safeParse({ userId: "  ", password: "" });
 
     expect(result.success).toBe(false);
     expect(result.error?.issues.map((issue) => issue.message)).toEqual([
