@@ -3,15 +3,12 @@
 import type { MouseEvent } from "react";
 import type { CategoryDto } from "@/entities/category";
 import { cn } from "@/shared/lib";
-import { Button } from "@/shared/ui";
+import { AdminButton, AdminTable, AdminTd, AdminTh } from "@/shared/ui/admin";
 import { getCodePrefix } from "../lib/categoryRules";
 import type { CategoryPanelHandlers } from "../model/client/categoryAdminTypes";
 import type { CategorySchema } from "../model/schema/categorySchema";
 import { useCreateCategory, useEditCategory } from "../model/useCategoryAdminQueries";
 import CategoryInputRow from "./CategoryInputRow";
-import TableFrame from "./TableFrame";
-import Td from "./Td";
-import Th from "./Th";
 
 interface Props extends CategoryPanelHandlers {
   // 없으면 대분류 표, 있으면 그 대분류 아래 중분류 표
@@ -68,7 +65,7 @@ export default function CategoryPanel({
 
   const moveButtons = (category: CategoryDto.AdminTree, index: number) => (
     <div className="flex justify-center gap-0.5">
-      <Button
+      <AdminButton
         size="xs"
         variant="outline"
         className="w-6 px-0"
@@ -77,8 +74,8 @@ export default function CategoryPanel({
         onClick={() => onMove(category.id, -1)}
       >
         ▲
-      </Button>
-      <Button
+      </AdminButton>
+      <AdminButton
         size="xs"
         variant="outline"
         className="w-6 px-0"
@@ -87,22 +84,23 @@ export default function CategoryPanel({
         onClick={() => onMove(category.id, 1)}
       >
         ▼
-      </Button>
+      </AdminButton>
     </div>
   );
 
   return (
     <section aria-label={label}>
-      <h2 className="mb-2 flex items-baseline gap-1.5 text-sm font-bold">
+      <h2 className="mb-2 flex items-baseline gap-1.5 text-sm leading-[normal] font-bold">
         {label}
-        <small className="text-xs font-normal text-[#8a929b]">
+        <small className="text-xs font-normal text-admin-muted">
           {parent
             ? `${parent.name} (${parent.abbr}) 아래 · 약어는 이 대분류 안에서만 겹치지 않으면 됨`
             : "약어는 대분류끼리 겹치면 안 됨"}
         </small>
       </h2>
-      <TableFrame>
-        <table className="w-full table-fixed border-collapse leading-[18px]">
+      <AdminTable>
+        {/* 분류 표의 칸은 높이 40, 위아래 여백 4 (분류 관리 시안) */}
+        <table className="w-full table-fixed border-collapse leading-[18px] [&_td]:h-10 [&_td]:py-1">
           <colgroup>
             <col className="w-[72px]" />
             <col />
@@ -112,19 +110,19 @@ export default function CategoryPanel({
           </colgroup>
           <thead>
             <tr>
-              <Th>순서</Th>
-              <Th>이름</Th>
-              <Th title="상품 코드 앞자리에 쓰는 영문 대문자 2자">
+              <AdminTh>순서</AdminTh>
+              <AdminTh>이름</AdminTh>
+              <AdminTh title="상품 코드 앞자리에 쓰는 영문 대문자 2자">
                 {parent ? "약어 · 코드 앞자리" : "약어"}
-              </Th>
-              <Th title="이 분류에 연결된 제품 수">제품 수</Th>
-              <Th>관리</Th>
+              </AdminTh>
+              <AdminTh title="이 분류에 연결된 제품 수">제품 수</AdminTh>
+              <AdminTh>관리</AdminTh>
             </tr>
           </thead>
           <tbody>
             {categories.length === 0 && (
               <tr>
-                <Td colSpan={5} className="py-6 leading-5 text-gray-500">
+                <AdminTd colSpan={5} className="py-6 leading-5 text-admin-sub">
                   {parent ? (
                     <>
                       중분류가 없습니다. 아래에서 추가하세요.
@@ -134,7 +132,7 @@ export default function CategoryPanel({
                   ) : (
                     "분류가 없습니다. 대분류부터 추가하세요."
                   )}
-                </Td>
+                </AdminTd>
               </tr>
             )}
             {categories.map((category, index) => {
@@ -164,8 +162,8 @@ export default function CategoryPanel({
                     selected && "bg-picked hover:bg-picked",
                   )}
                 >
-                  <Td>{moveButtons(category, index)}</Td>
-                  <Td className="text-left">
+                  <AdminTd>{moveButtons(category, index)}</AdminTd>
+                  <AdminTd className="text-left">
                     {parent ? (
                       category.name
                     ) : (
@@ -181,26 +179,26 @@ export default function CategoryPanel({
                     {!parent && (
                       <span className="ml-1 text-faint">({category.children?.length ?? 0})</span>
                     )}
-                  </Td>
-                  <Td className="font-mono text-xs">
+                  </AdminTd>
+                  <AdminTd className="font-mono text-xs leading-[18px]">
                     {category.abbr}
                     {parent && (
                       <span className="text-faint"> · {getCodePrefix(parent, category)}</span>
                     )}
-                  </Td>
-                  <Td className="text-right tabular-nums">
+                  </AdminTd>
+                  <AdminTd className="text-right tabular-nums">
                     <ProductCount count={category.productCount ?? 0} />
-                  </Td>
-                  <Td className="whitespace-nowrap">
-                    <Button
+                  </AdminTd>
+                  <AdminTd className="whitespace-nowrap">
+                    <AdminButton
                       size="xs"
                       variant="outline"
                       disabled={isEditing}
                       onClick={() => onEdit(category.id)}
                     >
                       수정
-                    </Button>
-                    <Button
+                    </AdminButton>
+                    <AdminButton
                       size="xs"
                       variant="outline"
                       className="ml-1"
@@ -208,8 +206,8 @@ export default function CategoryPanel({
                       onClick={() => onDelete(category)}
                     >
                       삭제
-                    </Button>
-                  </Td>
+                    </AdminButton>
+                  </AdminTd>
                 </tr>
               );
             })}
@@ -221,7 +219,7 @@ export default function CategoryPanel({
             />
           </tbody>
         </table>
-      </TableFrame>
+      </AdminTable>
     </section>
   );
 }

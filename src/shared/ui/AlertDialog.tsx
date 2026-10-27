@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
-import Button from "./Button";
+import AdminButton from "./admin/AdminButton";
 import Dialog from "./Dialog";
 
 type AlertKind = "warning" | "success" | "notice" | "confirm";
@@ -37,17 +37,17 @@ export default function AlertDialog({
   const actions =
     kind === "confirm" ? (
       <>
-        <Button variant="outline" size="sm" onClick={onClose}>
+        <AdminButton variant="outline" size="sm" onClick={onClose}>
           취소
-        </Button>
-        <Button variant="danger" size="sm" autoFocus onClick={onConfirm}>
+        </AdminButton>
+        <AdminButton variant="danger" size="sm" autoFocus onClick={onConfirm}>
           {confirmLabel}
-        </Button>
+        </AdminButton>
       </>
     ) : (
-      <Button size="sm" autoFocus onClick={onClose}>
+      <AdminButton size="sm" autoFocus onClick={onClose}>
         확인
-      </Button>
+      </AdminButton>
     );
 
   return (

@@ -5,6 +5,7 @@ import type { ReactNode } from "react";
 import { useMe } from "@/features/auth";
 import { ApiError } from "@/shared/api";
 import { ErrorView, StatusView } from "@/shared/ui";
+import { adminButtonClass } from "@/shared/ui/admin";
 
 interface Props {
   children: ReactNode;
@@ -35,10 +36,7 @@ export default function AdminContent({ children }: Props) {
 
   if (me.role === "CUSTOMER") {
     const storeLink = (
-      <Link
-        href="/"
-        className="inline-flex h-8 items-center rounded-[2px] bg-ink px-3 text-[13px] text-white"
-      >
+      <Link href="/" className={adminButtonClass()}>
         쇼핑몰로 가기
       </Link>
     );

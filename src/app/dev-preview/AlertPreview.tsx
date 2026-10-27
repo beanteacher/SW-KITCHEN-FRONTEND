@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { toast } from "@/shared/lib";
-import { AlertDialog, Button } from "@/shared/ui";
+import { AlertDialog } from "@/shared/ui";
+import { AdminButton } from "@/shared/ui/admin";
 
 type Kind = "warning" | "success" | "confirm";
 
@@ -20,25 +21,25 @@ export default function AlertPreview() {
 
   return (
     <div className="flex flex-wrap gap-2">
-      <Button size="sm" variant="outline" onClick={() => setOpen("warning")}>
+      <AdminButton size="sm" variant="outline" onClick={() => setOpen("warning")}>
         막힘 (경고)
-      </Button>
-      <Button size="sm" variant="outline" onClick={() => setOpen("success")}>
+      </AdminButton>
+      <AdminButton size="sm" variant="outline" onClick={() => setOpen("success")}>
         완료
-      </Button>
-      <Button size="sm" variant="outline" onClick={() => setOpen("confirm")}>
+      </AdminButton>
+      <AdminButton size="sm" variant="outline" onClick={() => setOpen("confirm")}>
         묻기
-      </Button>
-      <Button size="sm" variant="outline" onClick={() => toast("장바구니에 담았습니다.")}>
+      </AdminButton>
+      <AdminButton size="sm" variant="outline" onClick={() => toast("장바구니에 담았습니다.")}>
         짧은 알림 (성공)
-      </Button>
-      <Button
+      </AdminButton>
+      <AdminButton
         size="sm"
         variant="outline"
         onClick={() => toast("불러오지 못했습니다. 잠시 뒤 다시 시도해 주세요.", "error")}
       >
         짧은 알림 (오류)
-      </Button>
+      </AdminButton>
 
       {open && (
         <AlertDialog

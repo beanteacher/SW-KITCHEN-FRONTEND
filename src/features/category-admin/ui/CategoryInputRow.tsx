@@ -6,10 +6,9 @@ import { useForm } from "react-hook-form";
 import type { CategoryDto } from "@/entities/category";
 import { toApiError } from "@/shared/api";
 import { cn, toast } from "@/shared/lib";
-import { Button, FieldError, Input } from "@/shared/ui";
+import { AdminButton, AdminFieldError, AdminInput, AdminTd } from "@/shared/ui/admin";
 import { getDuplicateAbbrMessage, getServerFieldErrors, normalizeAbbr } from "../lib/categoryRules";
 import { CategorySchema } from "../model/schema/categorySchema";
-import Td from "./Td";
 
 interface Props {
   siblings: CategoryDto.AdminTree[];
@@ -85,21 +84,21 @@ export default function CategoryInputRow({
 
   return (
     <tr className={cn(editing ? selected && "bg-picked" : "bg-row-hover")}>
-      <Td>{order}</Td>
-      <Td className="text-left">
-        <Input
+      <AdminTd>{order}</AdminTd>
+      <AdminTd className="text-left">
+        <AdminInput
           {...register("name")}
           maxLength={20}
           placeholder="이름 (20자 이하)"
           aria-label="이름"
           aria-invalid={Boolean(errors.name)}
-          className="h-7"
+          size="xs"
           onKeyDown={handleKeyDown}
         />
-        {errors.name && <FieldError>{errors.name.message}</FieldError>}
-      </Td>
-      <Td>
-        <Input
+        {errors.name && <AdminFieldError>{errors.name.message}</AdminFieldError>}
+      </AdminTd>
+      <AdminTd>
+        <AdminInput
           {...abbrField}
           maxLength={2}
           placeholder="AA"
@@ -111,7 +110,8 @@ export default function CategoryInputRow({
               ? `제품 ${editing?.category.productCount}개가 연결되어 약어를 바꿀 수 없습니다 (상품 코드가 바뀌면 안 됨)`
               : undefined
           }
-          className="h-7 text-center font-mono"
+          size="xs"
+          className="text-center font-mono"
           // 치는 대로 대문자로 바꾸고 영문 외 글자는 지운다
           onChange={(event) => {
             event.target.value = normalizeAbbr(event.target.value);
@@ -119,28 +119,28 @@ export default function CategoryInputRow({
           }}
           onKeyDown={handleKeyDown}
         />
-        {errors.abbr && <FieldError>{errors.abbr.message}</FieldError>}
+        {errors.abbr && <AdminFieldError>{errors.abbr.message}</AdminFieldError>}
         {abbrLocked && (
           <p className="mt-1 text-left text-[11px] text-gray-400">제품 있음 · 못 바꿈</p>
         )}
-      </Td>
-      <Td className="text-right tabular-nums">{productCount}</Td>
-      <Td className="whitespace-nowrap">
+      </AdminTd>
+      <AdminTd className="text-right tabular-nums">{productCount}</AdminTd>
+      <AdminTd className="whitespace-nowrap">
         {editing ? (
           <>
-            <Button size="xs" disabled={busy} onClick={() => void submit()}>
+            <AdminButton size="xs" disabled={busy} onClick={() => void submit()}>
               저장
-            </Button>
-            <Button size="xs" variant="outline" className="ml-1" onClick={onCancel}>
+            </AdminButton>
+            <AdminButton size="xs" variant="outline" className="ml-1" onClick={onCancel}>
               취소
-            </Button>
+            </AdminButton>
           </>
         ) : (
-          <Button size="xs" disabled={busy} onClick={() => void submit()}>
+          <AdminButton size="xs" disabled={busy} onClick={() => void submit()}>
             추가
-          </Button>
+          </AdminButton>
         )}
-      </Td>
+      </AdminTd>
     </tr>
   );
 }
