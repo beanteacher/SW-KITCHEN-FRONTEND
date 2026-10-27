@@ -6,7 +6,15 @@ import { CategoryApi } from "../api/categoryApi";
 // 쿼리 키 팩토리. 분류를 바꾼 뒤에는 all 로 한꺼번에 다시 읽는다
 export const categoryKeys = {
   all: ["category"] as const,
+  tree: () => [...categoryKeys.all, "tree"] as const,
   adminTree: () => [...categoryKeys.all, "admin-tree"] as const,
+};
+
+export const useCategoryTree = () => {
+  return useQuery({
+    queryKey: categoryKeys.tree(),
+    queryFn: CategoryApi.tree,
+  });
 };
 
 export const useAdminCategoryTree = () => {
