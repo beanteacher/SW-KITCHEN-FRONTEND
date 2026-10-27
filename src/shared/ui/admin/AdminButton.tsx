@@ -7,11 +7,14 @@ const VARIANT = {
   danger: "border border-danger bg-danger text-white hover:bg-danger/90",
 };
 
-// sm 은 화면 버튼(높이 32), xs 는 표 안 버튼(높이 24). 모서리 2
+// 모서리 2. sm 은 화면 버튼(높이 32), compact 는 표 아래 도구 버튼(높이 26, 예: [+ 항목 추가]),
+// xs 는 표 안 버튼(높이 24), icon 은 ↑↓× 같은 기호 하나짜리 정사각 버튼(26)
 const SIZE = {
   sm: "h-8 px-3.5 text-[13px] disabled:opacity-45",
+  compact: "h-[26px] px-2.5 text-xs disabled:opacity-45",
   // 표 안 잠긴 버튼은 흐리게 하지 않고 글자·테두리만 옅게 한다 (▲▼ 끝 등)
   xs: "h-6 px-2 text-xs leading-[18px] disabled:border-admin-head-line disabled:bg-white disabled:text-admin-border",
+  icon: "size-[26px] p-0 text-xs text-[#555] disabled:border-admin-head-line disabled:bg-white disabled:text-[#ccc]",
 };
 
 interface ButtonStyle {
