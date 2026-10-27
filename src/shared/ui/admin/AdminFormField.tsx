@@ -1,5 +1,5 @@
 import { useId, type ReactNode } from "react";
-import FieldError from "./FieldError";
+import AdminFieldError from "./AdminFieldError";
 
 interface FieldControlProps {
   id: string;
@@ -16,7 +16,7 @@ interface Props {
 }
 
 // 관리자 폼 한 줄: 왼쪽 회색 이름 칸 + 오른쪽 입력칸, 오류는 입력칸 아래 빨간 글씨
-export default function FormField({ label, required, error, hint, children }: Props) {
+export default function AdminFormField({ label, required, error, hint, children }: Props) {
   const id = useId();
   const messageId = `${id}-message`;
   const message = error ?? hint;
@@ -37,7 +37,7 @@ export default function FormField({ label, required, error, hint, children }: Pr
           "aria-invalid": Boolean(error),
           "aria-describedby": message ? messageId : undefined,
         })}
-        {error && <FieldError id={messageId}>{error}</FieldError>}
+        {error && <AdminFieldError id={messageId}>{error}</AdminFieldError>}
         {!error && hint && (
           <p id={messageId} className="mt-1 text-xs text-gray-500">
             {hint}

@@ -1,17 +1,15 @@
 "use client";
 
-import { AlertDialog, ErrorView, PageTitle, StatusView } from "@/shared/ui";
+import { AlertDialog, ErrorView, StatusView } from "@/shared/ui";
+import { AdminPageHeader, AdminTable } from "@/shared/ui/admin";
 import { useCategoryAdminActions } from "../model/useCategoryAdminActions";
 import CategoryPanel from "./CategoryPanel";
-import TableFrame from "./TableFrame";
 
 function Header() {
   return (
     <>
-      <div className="mb-3 border-b border-admin-line pb-3">
-        <PageTitle title="분류 관리" variant="admin" />
-      </div>
-      <p className="mb-4 leading-5 text-gray-600">
+      <AdminPageHeader title="분류 관리" />
+      <p className="mb-4 leading-5 text-admin-sub">
         순서·이름은 저장하면 고객 화면에 바로 반영됩니다. 약어는 상품 코드 앞자리(예: 냉장·냉동 RF +
         업소용 냉장고 UR → <span className="font-mono text-xs">RFUR-00123-01</span>)라서 제품이
         연결된 뒤에는 바꿀 수 없습니다.
@@ -75,10 +73,10 @@ export default function CategoryManager() {
           />
         ) : (
           <section aria-label="중분류">
-            <h2 className="mb-2 text-sm font-bold">중분류</h2>
-            <TableFrame className="py-[60px] text-center text-gray-500">
+            <h2 className="mb-2 text-sm leading-[normal] font-bold">중분류</h2>
+            <AdminTable className="py-[60px] text-center text-admin-sub">
               대분류를 먼저 추가하세요.
-            </TableFrame>
+            </AdminTable>
           </section>
         )}
       </div>

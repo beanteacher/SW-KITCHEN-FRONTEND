@@ -14,6 +14,17 @@
   --color-faint: #b5bcc4;
   --color-picked: #eef3fc;
   --color-row-hover: #fafbfc;
+  /* 관리자 화면 (관리 시안 세 개 공통 값) */
+  --color-admin-bg: #f1f1f1; /* 본문 바탕 */
+  --color-admin-text: #333333; /* 버튼·머리 칸·메뉴 글자 */
+  --color-admin-sub: #666666; /* 빈 표·상태 안내 */
+  --color-admin-muted: #8a929b; /* 소제목·표 제목 옆 안내 */
+  --color-admin-border: #c4c9cf; /* 버튼·입력칸 테두리 */
+  --color-admin-fill: #f4f5f7; /* 머리 칸·잠긴 입력칸 바탕 */
+  --color-admin-head-line: #e5e7eb; /* 머리 칸 세로선, 잠긴 버튼 테두리 */
+  --color-admin-cell-line: #eceef0; /* 본문 칸 가로선 */
+  --color-admin-cell-vline: #f1f2f4; /* 본문 칸 세로선, 고른 메뉴 바탕 */
+  --color-admin-error: #e5484d; /* 입력칸 오류 */
   --font-sans: var(--font-pretendard), sans-serif;
 }
 
