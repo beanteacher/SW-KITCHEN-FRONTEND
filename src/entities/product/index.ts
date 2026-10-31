@@ -4,5 +4,5 @@ export { SALES_TYPE_LABEL } from "./config/salesTypeLabel";
 export { calcSalePrice } from "./lib/calcSalePrice";
 export { formatDiscount } from "./lib/formatDiscount";
 export type { ProductDto } from "./model/dto/productDto";
-export { productKeys, useAdminProduct } from "./model/useProductQueries";
+export { productKeys, useAdminProduct, useAdminProducts } from "./model/useProductQueries";
 export { default as SalesTypeBadge } from "./ui/SalesTypeBadge";

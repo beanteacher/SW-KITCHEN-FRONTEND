@@ -41,6 +41,8 @@ test("로그인한 뒤 쇼핑몰 머리글은 [로그아웃]", async ({ page }) 
 
 test("액세스 토큰이 만료돼도 리프레시 토큰으로 이어서 쓴다", async ({ page, context }) => {
   await login(page);
+  // 로그인 뒤 첫 화면(제품 관리)의 요청이 끝나길 기다린다. 도중에 토큰을 지우면 두 화면이 함께 재발급을 요청해 하나가 진다
+  await expect(page.getByText(/검색 결과|등록한 제품이 없습니다/)).toBeVisible();
   // 30분이 지난 상황: 액세스 토큰만 없앤다
   await context.clearCookies({ name: "access_token" });
 

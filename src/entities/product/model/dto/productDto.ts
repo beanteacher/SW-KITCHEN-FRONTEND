@@ -67,6 +67,36 @@ export interface AdminDetail {
   options?: AdminOption[];
 }
 
+// 관리 목록 검색 조건. categoryId 는 대분류 id 면 그 아래 중분류 전부를 찾는다
+export interface AdminSearchParams {
+  keyword?: string;
+  categoryId?: number;
+  salesType?: SalesType;
+  page: number;
+  size: number;
+}
+
+// 관리 목록 옵션 한 줄. 신제품은 stockQty·visibleQty 가 null
+export interface AdminSummaryOption {
+  id: number;
+  productCode?: string;
+  modelName?: string | null;
+  salePrice?: number;
+  stockQty?: number | null;
+  reservedQty?: number;
+  visibleQty?: number | null;
+}
+
+// 관리 목록 제품 한 줄. categoryName 은 "대분류 > 중분류"
+export interface AdminSummary {
+  id: number;
+  name?: string;
+  salesType?: SalesType;
+  categoryName?: string;
+  manufacturer?: string;
+  options?: AdminSummaryOption[];
+}
+
 // 등록·수정 때 보내는 옵션. 기존 옵션은 id·version 을 함께 보낸다. 신제품은 stockQty 가 null
 export interface OptionForm {
   id?: number;
