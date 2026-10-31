@@ -13,3 +13,14 @@ export function toProductFormPath(serverField: string, optionIndexes: number[]) 
     .replace(/(^|\.)imageKeys\b/, "$1images")
     .replace(/(^|\.)mainImageKey\b/, "$1mainImage");
 }
+
+// 폼 오류가 몇 곳인지. react-hook-form 오류 묶음에서 message 가 있는 자리를 센다 (ref 는 입력칸이라 건너뛴다)
+export function countFieldErrors(errors: unknown): number {
+  if (!errors || typeof errors !== "object") return 0;
+  const own = "message" in errors && typeof errors.message === "string" ? 1 : 0;
+  return Object.entries(errors).reduce(
+    (count, [key, value]) =>
+      key === "ref" || key === "message" ? count : count + countFieldErrors(value),
+    own,
+  );
+}

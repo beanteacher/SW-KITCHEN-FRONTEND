@@ -29,8 +29,12 @@ export const useEditProduct = () => {
   });
 };
 
+// 올리는 중인 이미지가 있는지 [저장] 줄에서 useIsMutating 으로 센다
+export const UPLOAD_IMAGE_KEY = ["product-image-upload"];
+
 export const useUploadImage = () => {
   return useMutation({
+    mutationKey: UPLOAD_IMAGE_KEY,
     mutationFn: ProductFormApi.uploadImage,
   });
 };
