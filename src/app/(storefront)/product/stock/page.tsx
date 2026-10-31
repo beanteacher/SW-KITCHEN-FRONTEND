@@ -1,5 +1,15 @@
-import { PageTitle } from "@/shared/ui";
+import { Suspense } from "react";
+import { ProductListView } from "@/features/product-list";
 
-export default function StockProductsPage() {
-  return <PageTitle title="재고·중고품" />;
+interface Props {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}
+
+export default function StockProductsPage({ searchParams }: Props) {
+  return (
+    // 조건을 주소에서 읽으므로 목록 부분만 열 때 그린다
+    <Suspense>
+      <ProductListView screen="stock" searchParams={searchParams} />
+    </Suspense>
+  );
 }

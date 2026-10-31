@@ -67,6 +67,8 @@ test("로그아웃하면 쿠키가 지워지고, 관리 화면은 로그인 화�
   );
   await page.getByRole("banner").getByRole("button", { name: "로그아웃" }).click();
   await reloaded;
+  // 목록은 응답 머리가 온 뒤에도 나눠서 계속 받는다. 다 받기 전에 떠나면 WebKit 이 끊긴 스트림을 오류로 남긴다
+  await page.waitForLoadState("networkidle");
 
   await expect(headerButton(page)).toHaveText(/로그인/);
   expect(await context.cookies()).toHaveLength(0);

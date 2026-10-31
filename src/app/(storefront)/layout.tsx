@@ -6,7 +6,8 @@ export default function StorefrontLayout({ children }: { children: ReactNode }) 
   return (
     <>
       <StoreHeader />
-      <main className="mx-auto min-h-[60vh] max-w-[1050px] px-4 py-10">{children}</main>
+      {/* 본문 너비는 화면마다 다르다 (목록은 1440px) */}
+      <main className="min-h-[60vh]">{children}</main>
       <StoreFooter />
     </>
   );

@@ -7,6 +7,9 @@ export type DiscountType = "NONE" | "RATE" | "AMOUNT";
 // 재질 코드는 서버 enum 과 같다. 한글 이름은 config/materialLabel.ts
 export type Material = "STAINLESS" | "ALUMINUM" | "STEEL" | "PLASTIC";
 
+// 목록 정렬. 인기순이 기본이다
+export type OrderBy = "POPULAR" | "NEWEST" | "PRICE_ASC" | "PRICE_DESC";
+
 // 이미지 키(저장할 때 보낸다)와 보여 줄 주소
 export interface Image {
   key: string;
@@ -65,6 +68,57 @@ export interface AdminDetail {
   images?: Image[];
   detailImages?: Image[];
   options?: AdminOption[];
+}
+
+// 쇼핑몰 목록 조건. 필터 API 는 정렬·페이지 없이 같은 조건을 받는다
+export interface SearchParams {
+  salesType?: SalesType[];
+  categoryId?: number;
+  materials?: Material[];
+  keyword?: string;
+  orderBy?: OrderBy;
+  page?: number;
+  size?: number;
+}
+
+// 판매가가 가장 낮은 옵션의 가격. varies 면 옵션마다 판매가가 달라 "~" 를 붙인다
+export interface Price {
+  salePrice?: number;
+  listPrice?: number;
+  discountType?: DiscountType;
+  discountValue?: number | null;
+  varies?: boolean;
+}
+
+// 쇼핑몰 목록 카드 하나
+export interface Summary {
+  id: number;
+  name?: string;
+  salesType?: SalesType;
+  manufacturer?: string;
+  mainImageUrl?: string | null;
+  price?: Price;
+}
+
+// 필터 분류 한 줄. 대분류만 children 을 가지고, 개수는 그 줄을 골랐을 때의 제품 수
+export interface FilterCategory {
+  id: number;
+  name?: string;
+  productCount?: number;
+  children?: FilterCategory[];
+}
+
+export interface FilterCount<C> {
+  code: C;
+  productCount?: number;
+}
+
+// total 은 분류 [전체] 줄의 개수
+export interface Filter {
+  total?: number;
+  categories?: FilterCategory[];
+  salesTypes?: FilterCount<SalesType>[];
+  materials?: FilterCount<Material>[];
 }
 
 // 관리 목록 검색 조건. categoryId 는 대분류 id 면 그 아래 중분류 전부를 찾는다

@@ -1,4 +1,5 @@
 import AdminButton from "./admin/AdminButton";
+import Button from "./Button";
 import StatusView from "./StatusView";
 
 interface Props {
@@ -15,14 +16,7 @@ export default function ErrorView({ message, onRetry, variant = "store" }: Props
         다시 시도
       </AdminButton>
     ) : (
-      // ponytail: 사용자 화면 버튼 부품이 아직 없어 여기만 직접 그린다. 쇼핑몰 화면을 만들 때 Button 으로 바꾼다
-      <button
-        type="button"
-        onClick={onRetry}
-        className="h-9 rounded-md border border-line bg-white px-4 text-sm hover:bg-gray-50"
-      >
-        다시 시도
-      </button>
+      <Button onClick={onRetry}>다시 시도</Button>
     );
 
   return <StatusView message={message} action={retryButton} />;
