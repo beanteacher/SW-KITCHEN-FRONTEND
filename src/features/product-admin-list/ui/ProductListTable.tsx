@@ -1,10 +1,11 @@
 import Link from "next/link";
 import { type ProductDto, SalesTypeBadge } from "@/entities/product";
 import { cn, formatNumber, formatPrice } from "@/shared/lib";
-import { AdminTd, AdminTh, adminButtonClass } from "@/shared/ui/admin";
+import { AdminCheckbox, AdminTd, AdminTh, adminButtonClass } from "@/shared/ui/admin";
 
 // 제품 칸만 남는 폭을 받고 나머지는 너비를 고정한다
 const COLUMNS = [
+  { label: "고르기", width: 36 },
   { label: "제품", width: undefined },
   { label: "대분류", width: 100 },
   { label: "중분류", width: 110 },
@@ -55,18 +56,44 @@ function QtyCells({ option }: { option: ProductDto.AdminSummaryOption }) {
   );
 }
 
-// 제품 하나를 옵션 수만큼의 줄로 그린다. 제품 칸과 [수정]은 세로로 합친다
-function ProductRows({ product }: { product: ProductDto.AdminSummary }) {
+interface RowProps {
+  product: ProductDto.AdminSummary;
+  picked: boolean;
+  onTogglePick: (id: number) => void;
+}
+
+// 제품 하나를 옵션 수만큼의 줄로 그린다. 고르기·제품 칸과 [수정]은 세로로 합친다
+function ProductRows({ product, picked, onTogglePick }: RowProps) {
   const options = product.options ?? [];
   const span = options.length;
   const [big, mid] = (product.categoryName ?? "").split(" > ");
 
   return options.map((option, index) => (
-    <tr key={option.id} className={cn(index === 0 && "[&>td]:border-t [&>td]:border-t-admin-line")}>
+    <tr
+      key={option.id}
+      className={cn(
+        index === 0 && "[&>td]:border-t [&>td]:border-t-admin-line",
+        picked && "[&>td]:bg-[#f6f8fb]",
+      )}
+    >
       {index === 0 && (
         <>
+          <AdminTd rowSpan={span}>
+            <AdminCheckbox
+              label={`${product.name} 고르기`}
+              hideLabel
+              checked={picked}
+              onChange={() => onTogglePick(product.id)}
+            />
+          </AdminTd>
           <AdminTd rowSpan={span} className="text-left">
-            <b className="block text-[13px] font-medium">{product.name}</b>
+            {/* 제품명도 [수정]과 같이 수정 화면으로 간다 */}
+            <Link
+              href={`/admin/product/${product.id}/edit`}
+              className="block text-[13px] font-medium hover:underline"
+            >
+              {product.name}
+            </Link>
             <span className="text-xs text-admin-muted">
               {product.manufacturer} · #{product.id}
             </span>
@@ -98,13 +125,23 @@ function ProductRows({ product }: { product: ProductDto.AdminSummary }) {
 
 interface Props {
   products: ProductDto.AdminSummary[];
+  picked: ReadonlySet<number>;
+  allPicked: boolean;
+  onTogglePick: (id: number) => void;
+  onTogglePickAll: () => void;
 }
 
 // 화면이 1280px 보다 좁으면 표만 가로로 스크롤된다
-export default function ProductListTable({ products }: Props) {
+export default function ProductListTable({
+  products,
+  picked,
+  allPicked,
+  onTogglePick,
+  onTogglePickAll,
+}: Props) {
   return (
     <div className="overflow-x-auto border border-t-2 border-admin-line border-t-ink bg-white">
-      <table className="w-full min-w-[1020px] table-fixed border-collapse leading-[18px] [&_tbody>tr:first-child>td]:border-t-0">
+      <table className="w-full min-w-[1056px] table-fixed border-collapse leading-[18px] [&_tbody>tr:first-child>td]:border-t-0">
         <colgroup>
           {COLUMNS.map(({ label, width }) => (
             <col key={label} style={{ width }} />
@@ -112,16 +149,32 @@ export default function ProductListTable({ products }: Props) {
         </colgroup>
         <thead>
           <tr>
-            {COLUMNS.map(({ label, title }) => (
-              <AdminTh key={label} title={title}>
-                {label}
-              </AdminTh>
-            ))}
+            {COLUMNS.map(({ label, title }) =>
+              label === "고르기" ? (
+                <AdminTh key={label}>
+                  <AdminCheckbox
+                    label="이 페이지 제품 모두 고르기"
+                    hideLabel
+                    checked={allPicked}
+                    onChange={onTogglePickAll}
+                  />
+                </AdminTh>
+              ) : (
+                <AdminTh key={label} title={title}>
+                  {label}
+                </AdminTh>
+              ),
+            )}
           </tr>
         </thead>
         <tbody>
           {products.map((product) => (
-            <ProductRows key={product.id} product={product} />
+            <ProductRows
+              key={product.id}
+              product={product}
+              picked={picked.has(product.id)}
+              onTogglePick={onTogglePick}
+            />
           ))}
         </tbody>
       </table>

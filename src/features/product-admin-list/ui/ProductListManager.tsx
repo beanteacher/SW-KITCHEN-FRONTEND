@@ -3,7 +3,7 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { formatNumber } from "@/shared/lib";
-import { Pagination } from "@/shared/ui";
+import { AlertDialog, Pagination } from "@/shared/ui";
 import { AdminButton, AdminTable, adminButtonClass } from "@/shared/ui/admin";
 import { useProductListActions } from "../model/useProductListActions";
 import ProductListTable from "./ProductListTable";
@@ -40,6 +40,14 @@ export default function ProductListManager() {
     handleSelectSalesType,
     handleReset,
     handleRetry,
+    picked,
+    allPicked,
+    isDeleting,
+    alert,
+    handleTogglePick,
+    handleTogglePickAll,
+    handleDelete,
+    handleCloseAlert,
   } = useProductListActions();
 
   const renderList = () => {
@@ -79,10 +87,26 @@ export default function ProductListManager() {
     }
     return (
       <>
-        <p className="mb-2">
-          검색 결과 <b className="text-admin-error">{formatNumber(totalElements)}</b>건
-        </p>
-        <ProductListTable products={products} />
+        <div className="mb-2 flex items-end justify-between">
+          <p>
+            검색 결과 <b className="text-admin-error">{formatNumber(totalElements)}</b>건
+          </p>
+          <AdminButton
+            variant="danger"
+            size="compact"
+            disabled={picked.size === 0 || isDeleting}
+            onClick={handleDelete}
+          >
+            선택 삭제{picked.size > 0 && ` (${picked.size})`}
+          </AdminButton>
+        </div>
+        <ProductListTable
+          products={products}
+          picked={picked}
+          allPicked={allPicked}
+          onTogglePick={handleTogglePick}
+          onTogglePickAll={handleTogglePickAll}
+        />
         <div className="mt-5">
           <Pagination page={filters.page} totalPages={totalPages} getHref={pageHref} size="sm" />
         </div>
@@ -105,6 +129,15 @@ export default function ProductListManager() {
         onReset={handleReset}
       />
       {renderList()}
+      <AlertDialog
+        open={alert !== null}
+        kind={alert?.kind ?? "success"}
+        title={alert?.title ?? ""}
+        onClose={handleCloseAlert}
+        onConfirm={alert?.onConfirm}
+      >
+        {alert?.message}
+      </AlertDialog>
     </>
   );
 }
