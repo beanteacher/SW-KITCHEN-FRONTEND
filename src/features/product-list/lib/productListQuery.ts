@@ -64,6 +64,11 @@ export function toProductListHref(path: string, query: ProductListQuery) {
   return queryString ? `${path}?${queryString}` : path;
 }
 
+// 분류를 바꾼다. 재질·판매 구분 개수는 분류에 따라 달라지므로 둘 다 지우고 새 분류에서 다시 고르게 한다
+export function withCategory(query: ProductListQuery, categoryId: number | null) {
+  return { ...query, categoryId, salesTypes: [], materials: [], page: 1 };
+}
+
 // 목록에 넣었다 뺐다 한다 (재질·판매 구분 네모 상자)
 export function toggle<T>(list: T[], item: T) {
   return list.includes(item) ? list.filter((value) => value !== item) : [...list, item];

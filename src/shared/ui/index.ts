@@ -4,6 +4,7 @@ export { default as Button, buttonClass } from "./Button";
 export { default as Dialog } from "./Dialog";
 export { default as ErrorView } from "./ErrorView";
 export { default as PageTitle } from "./PageTitle";
+export { default as RefreshErrorView } from "./RefreshErrorView";
 export { default as Pagination } from "./Pagination";
 export { default as Select, type SelectOption } from "./Select";
 export { default as StatusView } from "./StatusView";

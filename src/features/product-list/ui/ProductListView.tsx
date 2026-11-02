@@ -2,15 +2,15 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { ProductApi, ProductCard, type ProductDto } from "@/entities/product";
 import type { PageResponse } from "@/shared/api";
-import { buttonClass, Pagination, StatusView } from "@/shared/ui";
+import { buttonClass, Pagination, RefreshErrorView, StatusView } from "@/shared/ui";
 import { LIST_SCREENS, type ListScreen, type ListScreenKey } from "../config/listScreens";
 import {
   parseProductListQuery,
   type ProductListQuery,
   toProductListHref,
   toUrlSearchParams,
+  withCategory,
 } from "../lib/productListQuery";
-import ListErrorView from "./ListErrorView";
 import ProductFilter from "./ProductFilter";
 import SortTabs from "./SortTabs";
 
@@ -48,9 +48,7 @@ function Crumb({
         <>
           {separator}
           {mid ? (
-            <Link href={toProductListHref(path, { ...query, categoryId: big.id, page: 1 })}>
-              {big.name}
-            </Link>
+            <Link href={toProductListHref(path, withCategory(query, big.id))}>{big.name}</Link>
           ) : (
             <strong className="text-black">{big.name}</strong>
           )}
@@ -97,7 +95,8 @@ export default async function ProductListView({ screen: screenKey, searchParams 
   }
 
   const params: ProductDto.SearchParams = {
-    salesType: query.salesTypes.length > 0 ? query.salesTypes : screen.salesTypes,
+    scope: screen.scope,
+    salesType: query.salesTypes,
     categoryId: query.categoryId ?? undefined,
     materials: query.materials,
     keyword: query.keyword,
@@ -122,7 +121,7 @@ export default async function ProductListView({ screen: screenKey, searchParams 
     return (
       <Frame>
         <h1 className="mb-3.5 text-[#666]">{title}</h1>
-        <ListErrorView />
+        <RefreshErrorView message="제품을 불러오지 못했습니다. 잠시 후 다시 시도해 주세요" />
       </Frame>
     );
   }

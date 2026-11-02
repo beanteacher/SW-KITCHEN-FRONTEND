@@ -20,6 +20,18 @@ test("재고·중고품 목록에서 거르고 정렬하면 주소에 남고, �
   await expect(page).toHaveURL(/\/product\/stock\?orderBy=PRICE_ASC$/);
 });
 
+test("재질·판매 구분을 고른 뒤 분류를 바꾸면 둘 다 지워진다", async ({ page }) => {
+  await page.goto("/product/stock?salesType=USED&materials=STAINLESS");
+  // 분류 구역에서 [전체] 다음 줄이 첫 대분류다. 이름은 백오피스에서 정한 것이라 순서로 고른다
+  const categoryLinks = page.getByRole("group").filter({ hasText: /^분류/ }).getByRole("link");
+  test.skip((await categoryLinks.count()) < 2, "대분류가 있어야 한다");
+
+  await categoryLinks.nth(1).click();
+  await expect(page).toHaveURL(/categoryId=\d+/);
+  await expect(page).not.toHaveURL(/salesType=/);
+  await expect(page).not.toHaveURL(/materials=/);
+});
+
 test("카드는 제품 상세로 가는 링크다", async ({ page }) => {
   await page.goto("/product/stock");
   const cards = page.getByRole("region", { name: "제품 목록" }).getByRole("listitem");

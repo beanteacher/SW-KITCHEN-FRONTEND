@@ -3,7 +3,9 @@ import type { ProductDto } from "@/entities/product";
 export interface ListScreen {
   path: string;
   title: string;
-  // 이 화면이 늘 보내는 판매 구분. 재고·중고품은 하나로 좁힐 수 있다
+  // 이 화면의 범위. 검색 결과는 범위가 없다
+  scope?: ProductDto.Scope;
+  // 범위 안의 판매 구분. 둘 이상이면 필터에서 골라 좁힐 수 있다
   salesTypes: ProductDto.SalesType[];
   // 검색 결과는 왼쪽 필터가 없다
   hasFilter: boolean;
@@ -14,6 +16,7 @@ export const LIST_SCREENS = {
   new: {
     path: "/product/new",
     title: "신제품",
+    scope: "NEW",
     salesTypes: ["NEW"],
     hasFilter: true,
     showSalesType: false,
@@ -21,6 +24,7 @@ export const LIST_SCREENS = {
   stock: {
     path: "/product/stock",
     title: "재고·중고품",
+    scope: "STOCK",
     salesTypes: ["STOCK", "USED"],
     hasFilter: true,
     showSalesType: true,

@@ -3,7 +3,12 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { MATERIAL_LABEL, type ProductDto, SALES_TYPE_LABEL } from "@/entities/product";
 import type { ListScreen } from "../config/listScreens";
-import { type ProductListQuery, toggle, toProductListHref } from "../lib/productListQuery";
+import {
+  type ProductListQuery,
+  toggle,
+  toProductListHref,
+  withCategory,
+} from "../lib/productListQuery";
 import FilterRow from "./FilterRow";
 
 interface Props {
@@ -28,7 +33,7 @@ function Section({ title, children }: { title: string; children: ReactNode }) {
   );
 }
 
-// 컬리형 왼쪽 필터: 카테고리(하나만) · 판매 구분(재고·중고품만) · 재질(여러 개). 고르면 1페이지로 돌아간다
+// 컬리형 왼쪽 필터: 분류(하나만) · 판매 구분(재고·중고품만) · 재질(여러 개). 고르면 1페이지로 돌아간다
 export default function ProductFilter({ screen, query, filter }: Props) {
   const hrefWith = (next: Partial<ProductListQuery>) =>
     toProductListHref(screen.path, { ...query, ...next, page: 1 });
@@ -64,13 +69,13 @@ export default function ProductFilter({ screen, query, filter }: Props) {
         )}
       </div>
 
-      <Section title="카테고리">
+      <Section title="분류">
         <FilterRow
           shape="radio"
           label="전체"
           count={filter.total}
           selected={query.categoryId === null}
-          href={hrefWith({ categoryId: null })}
+          href={toProductListHref(screen.path, withCategory(query, null))}
         />
         {categories.map((big) => (
           <div key={big.id}>
@@ -79,7 +84,7 @@ export default function ProductFilter({ screen, query, filter }: Props) {
               label={big.name ?? ""}
               count={big.productCount}
               selected={big.id === query.categoryId}
-              href={hrefWith({ categoryId: big.id })}
+              href={toProductListHref(screen.path, withCategory(query, big.id))}
             />
             {big.id === pickedBig?.id &&
               big.children?.map((mid) => (
@@ -90,7 +95,7 @@ export default function ProductFilter({ screen, query, filter }: Props) {
                   label={mid.name ?? ""}
                   count={mid.productCount}
                   selected={mid.id === query.categoryId}
-                  href={hrefWith({ categoryId: mid.id })}
+                  href={toProductListHref(screen.path, withCategory(query, mid.id))}
                 />
               ))}
           </div>

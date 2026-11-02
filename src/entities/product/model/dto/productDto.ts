@@ -71,7 +71,12 @@ export interface AdminDetail {
 }
 
 // 쇼핑몰 목록 조건. 필터 API 는 정렬·페이지 없이 같은 조건을 받는다
+// 고객 목록 화면의 범위. NEW 는 신제품, STOCK 은 재고품·중고품. 검색 결과는 범위가 없다
+export type Scope = "NEW" | "STOCK";
+
 export interface SearchParams {
+  scope?: Scope;
+  // 그 화면 안에서 사용자가 고른 판매 구분만 보낸다
   salesType?: SalesType[];
   categoryId?: number;
   materials?: Material[];
@@ -119,6 +124,38 @@ export interface Filter {
   categories?: FilterCategory[];
   salesTypes?: FilterCount<SalesType>[];
   materials?: FilterCount<Material>[];
+}
+
+// 쇼핑몰 상세의 옵션. 보이는 수량 0 이면 품절, 신제품은 visibleQty 가 null (품절 없음)
+export interface Option {
+  id: number;
+  productCode?: string;
+  widthMm?: number;
+  depthMm?: number;
+  heightMm?: number;
+  listPrice?: number;
+  discountType?: DiscountType;
+  discountValue?: number | null;
+  salePrice?: number;
+  visibleQty?: number | null;
+  mainImageUrl?: string | null;
+  imageUrls?: string[];
+}
+
+// 쇼핑몰 상세. 모델명·재고는 오지 않는다
+export interface Detail {
+  id: number;
+  name?: string;
+  salesType?: SalesType;
+  category?: CategoryRef;
+  manufacturer?: string;
+  origin?: string;
+  materials?: MaterialItem[];
+  specs?: Spec[];
+  description?: string | null;
+  imageUrls?: string[];
+  detailImageUrls?: string[];
+  options?: Option[];
 }
 
 // 관리 목록 검색 조건. categoryId 는 대분류 id 면 그 아래 중분류 전부를 찾는다

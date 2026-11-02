@@ -22,10 +22,13 @@ export const list = (params: ProductDto.SearchParams) =>
   apiRequest<PageResponse<ProductDto.Summary>>(BASE_URL, { searchParams: toSearchParams(params) });
 
 // 목록 왼쪽 필터 (줄마다 제품 수)
-export const filter = ({ salesType, categoryId, materials }: ProductDto.SearchParams) =>
+export const filter = ({ scope, salesType, categoryId, materials }: ProductDto.SearchParams) =>
   apiRequest<ProductDto.Filter>(`${BASE_URL}/filter`, {
-    searchParams: toSearchParams({ salesType, categoryId, materials }),
+    searchParams: toSearchParams({ scope, salesType, categoryId, materials }),
   });
+
+// 쇼핑몰 상세. 모든 옵션이 품절이어도 열린다
+export const detail = (id: number) => apiRequest<ProductDto.Detail>(`${BASE_URL}/${id}`);
 
 // 관리 목록. 새로 등록한 순. 빈 조건은 보내지 않는다
 export const adminList = ({
