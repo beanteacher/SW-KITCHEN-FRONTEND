@@ -34,9 +34,10 @@ export const test = base.extend<{ consoleErrors: string[]; expectedConsoleErrors
         if (expected.some((pattern) => pattern.test(message.text()))) return;
         errors.push(`${new URL(page.url()).pathname}: ${message.text().split("\n")[0]}`);
       });
-      page.on("pageerror", (error) =>
-        errors.push(`${new URL(page.url()).pathname}: ${error.message}`),
-      );
+      page.on("pageerror", (error) => {
+        if (expected.some((pattern) => pattern.test(error.message))) return;
+        errors.push(`${new URL(page.url()).pathname}: ${error.message}`);
+      });
 
       await use(errors);
 
