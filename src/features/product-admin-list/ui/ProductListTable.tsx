@@ -59,11 +59,12 @@ function QtyCells({ option }: { option: ProductDto.AdminSummaryOption }) {
 interface RowProps {
   product: ProductDto.AdminSummary;
   picked: boolean;
+  readOnly: boolean;
   onTogglePick: (id: number) => void;
 }
 
 // 제품 하나를 옵션 수만큼의 줄로 그린다. 고르기·제품 칸과 [수정]은 세로로 합친다
-function ProductRows({ product, picked, onTogglePick }: RowProps) {
+function ProductRows({ product, picked, readOnly, onTogglePick }: RowProps) {
   const options = product.options ?? [];
   const span = options.length;
   const [big, mid] = (product.categoryName ?? "").split(" > ");
@@ -87,13 +88,17 @@ function ProductRows({ product, picked, onTogglePick }: RowProps) {
             />
           </AdminTd>
           <AdminTd rowSpan={span} className="text-left">
-            {/* 제품명도 [수정]과 같이 수정 화면으로 간다 */}
-            <Link
-              href={`/admin/product/${product.id}/edit`}
-              className="block text-[13px] font-medium hover:underline"
-            >
-              {product.name}
-            </Link>
+            {readOnly ? (
+              <b className="block text-[13px] font-medium">{product.name}</b>
+            ) : (
+              // 제품명도 [수정]과 같이 수정 화면으로 간다
+              <Link
+                href={`/admin/product/${product.id}/edit`}
+                className="block text-[13px] font-medium hover:underline"
+              >
+                {product.name}
+              </Link>
+            )}
             <span className="text-xs text-admin-muted">
               {product.manufacturer} · #{product.id}
             </span>
@@ -109,7 +114,7 @@ function ProductRows({ product, picked, onTogglePick }: RowProps) {
       <AdminTd className={CODE}>{option.modelName || MUTED}</AdminTd>
       <AdminTd className={NUM}>{formatPrice(option.salePrice ?? 0)}</AdminTd>
       <QtyCells option={option} />
-      {index === 0 && (
+      {index === 0 && !readOnly && (
         <AdminTd rowSpan={span}>
           <Link
             href={`/admin/product/${product.id}/edit`}
@@ -127,6 +132,8 @@ interface Props {
   products: ProductDto.AdminSummary[];
   picked: ReadonlySet<number>;
   allPicked: boolean;
+  // 옆 패널은 [관리] 칸과 제품명 링크 없이 목록 확인 + 선택 삭제만 한다
+  readOnly?: boolean;
   onTogglePick: (id: number) => void;
   onTogglePickAll: () => void;
 }
@@ -136,20 +143,28 @@ export default function ProductListTable({
   products,
   picked,
   allPicked,
+  readOnly = false,
   onTogglePick,
   onTogglePickAll,
 }: Props) {
+  const columns = readOnly ? COLUMNS.filter((column) => column.label !== "관리") : COLUMNS;
+
   return (
     <div className="overflow-x-auto border border-t-2 border-admin-line border-t-ink bg-white">
-      <table className="w-full min-w-[1056px] table-fixed border-collapse leading-[18px] [&_tbody>tr:first-child>td]:border-t-0">
+      <table
+        className={cn(
+          "w-full table-fixed border-collapse leading-[18px] [&_tbody>tr:first-child>td]:border-t-0",
+          readOnly ? "min-w-[992px]" : "min-w-[1056px]",
+        )}
+      >
         <colgroup>
-          {COLUMNS.map(({ label, width }) => (
+          {columns.map(({ label, width }) => (
             <col key={label} style={{ width }} />
           ))}
         </colgroup>
         <thead>
           <tr>
-            {COLUMNS.map(({ label, title }) =>
+            {columns.map(({ label, title }) =>
               label === "고르기" ? (
                 <AdminTh key={label}>
                   <AdminCheckbox
@@ -173,6 +188,7 @@ export default function ProductListTable({
               key={product.id}
               product={product}
               picked={picked.has(product.id)}
+              readOnly={readOnly}
               onTogglePick={onTogglePick}
             />
           ))}

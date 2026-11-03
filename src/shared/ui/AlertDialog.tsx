@@ -22,6 +22,8 @@ interface Props {
   // confirm 일 때 [삭제] 를 누르면 부른다
   onConfirm?: () => void;
   confirmLabel?: string;
+  // [확인] 앞에 붙는 버튼 하나 (예: 막힘 창의 [제품 보기])
+  extraAction?: { label: string; onClick: () => void };
 }
 
 // 관리자 화면의 알림 창. 경고·성공·안내는 [확인] 하나, 확인 요청은 [취소] [삭제]
@@ -33,6 +35,7 @@ export default function AlertDialog({
   onClose,
   onConfirm,
   confirmLabel = "삭제",
+  extraAction,
 }: Props) {
   const actions =
     kind === "confirm" ? (
@@ -45,9 +48,16 @@ export default function AlertDialog({
         </AdminButton>
       </>
     ) : (
-      <AdminButton size="sm" autoFocus onClick={onClose}>
-        확인
-      </AdminButton>
+      <>
+        {extraAction && (
+          <AdminButton variant="outline" size="sm" onClick={extraAction.onClick}>
+            {extraAction.label}
+          </AdminButton>
+        )}
+        <AdminButton size="sm" autoFocus onClick={onClose}>
+          확인
+        </AdminButton>
+      </>
     );
 
   return (

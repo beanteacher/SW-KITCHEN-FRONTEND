@@ -8,6 +8,7 @@ export { default as AdminInput } from "./AdminInput";
 export { default as AdminPageHeader } from "./AdminPageHeader";
 export { default as AdminRadio } from "./AdminRadio";
 export { default as AdminSelect } from "./AdminSelect";
+export { default as AdminSidePanel } from "./AdminSidePanel";
 export { default as AdminTable } from "./AdminTable";
 export { default as AdminTd } from "./AdminTd";
 export { default as AdminTextarea } from "./AdminTextarea";

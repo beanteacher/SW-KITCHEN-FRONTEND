@@ -1,25 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import type { ReactNode } from "react";
 import { formatNumber } from "@/shared/lib";
-import { AlertDialog, Pagination } from "@/shared/ui";
-import { AdminButton, AdminTable, adminButtonClass } from "@/shared/ui/admin";
+import { AdminButton, adminButtonClass } from "@/shared/ui/admin";
 import { useProductListActions } from "../model/useProductListActions";
-import ProductListTable from "./ProductListTable";
+import ProductListPanel, { TableMessage } from "./ProductListPanel";
 import ProductSearchBox from "./ProductSearchBox";
 
-// 표 자리에 띄우는 안내 (불러오는 중·없음·오류)
-function TableMessage({ message, action }: { message: string; action?: ReactNode }) {
-  return (
-    <AdminTable role="status" className="flex flex-col items-center gap-4 py-20 text-admin-sub">
-      <p>{message}</p>
-      {action}
-    </AdminTable>
-  );
-}
-
-// 찾기 줄 + 검색 결과 N건 + 표 + 페이지 번호
+// 찾기 줄 + 목록. 조건·페이지는 주소에 남는다
 export default function ProductListManager() {
   const {
     filters,
@@ -27,11 +15,7 @@ export default function ProductListManager() {
     bigId,
     midId,
     mids,
-    products,
-    totalElements,
-    totalPages,
-    isPending,
-    isError,
+    params,
     isFiltered,
     pageHref,
     handleSearch,
@@ -39,80 +23,7 @@ export default function ProductListManager() {
     handleSelectMid,
     handleSelectSalesType,
     handleReset,
-    handleRetry,
-    picked,
-    allPicked,
-    isDeleting,
-    alert,
-    handleTogglePick,
-    handleTogglePickAll,
-    handleDelete,
-    handleCloseAlert,
   } = useProductListActions();
-
-  const renderList = () => {
-    if (isError) {
-      return (
-        <TableMessage
-          message="목록을 불러오지 못했습니다."
-          action={
-            <AdminButton variant="outline" onClick={handleRetry}>
-              다시 시도
-            </AdminButton>
-          }
-        />
-      );
-    }
-    if (isPending) return <TableMessage message="불러오는 중…" />;
-    if (products.length === 0) {
-      return isFiltered ? (
-        <TableMessage
-          message="조건에 맞는 제품이 없습니다."
-          action={
-            <AdminButton variant="outline" onClick={handleReset}>
-              초기화
-            </AdminButton>
-          }
-        />
-      ) : (
-        <TableMessage
-          message="등록한 제품이 없습니다."
-          action={
-            <Link href="/admin/product/new" className={adminButtonClass()}>
-              + 제품 등록
-            </Link>
-          }
-        />
-      );
-    }
-    return (
-      <>
-        <div className="mb-2 flex items-end justify-between">
-          <p>
-            검색 결과 <b className="text-admin-error">{formatNumber(totalElements)}</b>건
-          </p>
-          <AdminButton
-            variant="danger"
-            size="compact"
-            disabled={picked.size === 0 || isDeleting}
-            onClick={handleDelete}
-          >
-            선택 삭제{picked.size > 0 && ` (${picked.size})`}
-          </AdminButton>
-        </div>
-        <ProductListTable
-          products={products}
-          picked={picked}
-          allPicked={allPicked}
-          onTogglePick={handleTogglePick}
-          onTogglePickAll={handleTogglePickAll}
-        />
-        <div className="mt-5">
-          <Pagination page={filters.page} totalPages={totalPages} getHref={pageHref} size="sm" />
-        </div>
-      </>
-    );
-  };
 
   return (
     <>
@@ -128,16 +39,36 @@ export default function ProductListManager() {
         onSelectSalesType={handleSelectSalesType}
         onReset={handleReset}
       />
-      {renderList()}
-      <AlertDialog
-        open={alert !== null}
-        kind={alert?.kind ?? "success"}
-        title={alert?.title ?? ""}
-        onClose={handleCloseAlert}
-        onConfirm={alert?.onConfirm}
-      >
-        {alert?.message}
-      </AlertDialog>
+      <ProductListPanel
+        params={params}
+        pageTarget={{ getHref: pageHref }}
+        renderCount={(total) => (
+          <>
+            검색 결과 <b className="text-admin-error">{formatNumber(total)}</b>건
+          </>
+        )}
+        renderEmpty={() =>
+          isFiltered ? (
+            <TableMessage
+              message="조건에 맞는 제품이 없습니다."
+              action={
+                <AdminButton variant="outline" onClick={handleReset}>
+                  초기화
+                </AdminButton>
+              }
+            />
+          ) : (
+            <TableMessage
+              message="등록한 제품이 없습니다."
+              action={
+                <Link href="/admin/product/new" className={adminButtonClass()}>
+                  + 제품 등록
+                </Link>
+              }
+            />
+          )
+        }
+      />
     </>
   );
 }
