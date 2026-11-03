@@ -1,7 +1,9 @@
 "use client";
 
+import type { ReactNode } from "react";
 import { AlertDialog, ErrorView, StatusView } from "@/shared/ui";
 import { AdminPageHeader, AdminTable } from "@/shared/ui/admin";
+import type { ProductsTarget } from "../model/client/categoryAdminTypes";
 import { useCategoryAdminActions } from "../model/useCategoryAdminActions";
 import CategoryPanel from "./CategoryPanel";
 
@@ -18,20 +20,31 @@ function Header() {
   );
 }
 
+interface Props {
+  // 분류의 제품을 보여 줄 옆 패널. 제품 기능이 그리므로 밖(위젯)에서 넣는다
+  renderProductsPanel?: (target: ProductsTarget | null, onClose: () => void) => ReactNode;
+}
+
 // 왼쪽 대분류 표, 오른쪽 고른 대분류의 중분류 표
-export default function CategoryManager() {
+export default function CategoryManager({ renderProductsPanel }: Props) {
   const {
     categories,
     big,
     isLoading,
     isError,
     alert,
+    productsTarget,
     panelHandlers,
     handleRetry,
     handleSelectBig,
     handleMove,
     handleCloseAlert,
+    handleCloseProducts,
   } = useCategoryAdminActions();
+  // 패널이 없으면 수량은 숫자로만, 막힘 창에는 [제품 보기]를 두지 않는다
+  const handlers = renderProductsPanel
+    ? panelHandlers
+    : { ...panelHandlers, onShowProducts: undefined };
 
   if (isLoading) {
     return (
@@ -60,7 +73,7 @@ export default function CategoryManager() {
           selectedId={big?.id}
           onSelect={handleSelectBig}
           onMove={handleMove(categories, null)}
-          {...panelHandlers}
+          {...handlers}
         />
         {big ? (
           // 대분류를 바꾸면 추가 줄에 치던 값은 비운다
@@ -69,7 +82,7 @@ export default function CategoryManager() {
             parent={big}
             categories={big.children ?? []}
             onMove={handleMove(big.children ?? [], big.id)}
-            {...panelHandlers}
+            {...handlers}
           />
         ) : (
           <section aria-label="중분류">
@@ -86,9 +99,11 @@ export default function CategoryManager() {
         title={alert?.title ?? ""}
         onClose={handleCloseAlert}
         onConfirm={alert?.onConfirm}
+        extraAction={renderProductsPanel ? alert?.extraAction : undefined}
       >
         {alert?.message}
       </AlertDialog>
+      {renderProductsPanel?.(productsTarget, handleCloseProducts)}
     </>
   );
 }

@@ -2,7 +2,7 @@ import type { APIRequestContext, APIResponse } from "@playwright/test";
 
 // 화면을 확인할 시험용 제품. 테스트 전에 만들고 끝나면 분류까지 지운다
 // 분류는 E2E 분류 테스트가 지우는 "E2E " 로 시작하지 않게 두고, 약어도 그 테스트(QA·QB·UR)와 겹치지 않게 둔다
-const CATEGORY = { big: "시험용 분류", mid: "시험용", abbr: "XT" };
+export const CATEGORY = { big: "시험용 분류", mid: "시험용", abbr: "XT" };
 export const NAME_PREFIX = "시험용";
 
 const HEADERS = { "X-Requested-With": "XMLHttpRequest" };

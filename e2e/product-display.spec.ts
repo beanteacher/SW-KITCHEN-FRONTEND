@@ -1,5 +1,11 @@
 import { expect, login, test } from "./fixtures";
-import { NAME_PREFIX, removeSeedProducts, type SeededProducts, seedProducts } from "./seedProducts";
+import {
+  CATEGORY,
+  NAME_PREFIX,
+  removeSeedProducts,
+  type SeededProducts,
+  seedProducts,
+} from "./seedProducts";
 
 // 품절·할인·옵션 수가 정해진 시험용 제품으로 화면 표시를 확인한다. 고객 화면은 로그인하지 않고 본다
 let seeded: SeededProducts;
@@ -183,5 +189,75 @@ test.describe("관리 화면", () => {
     await bulk.getByRole("button", { name: "적용" }).click();
 
     for (const input of await listPrices.all()) await expect(input).toHaveValue("150,000");
+  });
+});
+
+test.describe("분류 관리 옆 패널", () => {
+  test.beforeEach(async ({ page }) => {
+    await login(page, "/login?redirect=/admin/category");
+  });
+
+  test("수량을 누르면 옆 패널에 그 분류의 제품이 열리고, 닫으면 주소는 그대로다", async ({
+    page,
+  }) => {
+    await page.getByRole("button", { name: CATEGORY.big, exact: true }).click();
+    await expect(page).toHaveURL(/\?big=\d+$/);
+    const url = page.url();
+    const count = page
+      .getByRole("region", { name: "중분류" })
+      .getByRole("button", { name: new RegExp(`^${CATEGORY.mid} 제품 \\d+개 보기$`) });
+    await count.click();
+
+    const panel = page.getByRole("dialog", { name: `제품 — ${CATEGORY.mid}` });
+    await expect(panel).toBeVisible();
+    await expect(
+      panel.getByRole("row").filter({ hasText: `${NAME_PREFIX} 신제품 옵션 하나` }),
+    ).toBeVisible();
+    // 목록 확인 + 선택 삭제만: [수정]·제품명 링크가 없다
+    await expect(panel.getByRole("link")).toHaveCount(0);
+    await expect(panel.getByRole("button", { name: "수정" })).toHaveCount(0);
+
+    await page.keyboard.press("Escape");
+    await expect(panel).toBeHidden();
+    await expect(count).toBeFocused();
+    expect(page.url()).toBe(url);
+  });
+
+  test("삭제 불가 창의 [제품 보기]로 패널에서 제품을 모두 지우면 분류를 지울 수 있다", async ({
+    page,
+  }) => {
+    await page.getByRole("button", { name: CATEGORY.big, exact: true }).click();
+    const midRow = page
+      .getByRole("region", { name: "중분류" })
+      .getByRole("row")
+      .filter({ hasText: CATEGORY.mid });
+    await midRow.getByRole("button", { name: "삭제" }).click();
+
+    const blocked = page.getByRole("dialog", { name: "삭제 불가" });
+    await expect(blocked).toContainText("[제품 보기]에서 제품을 삭제하거나");
+    await blocked.getByRole("button", { name: "제품 보기" }).click();
+
+    const panel = page.getByRole("dialog", { name: `제품 — ${CATEGORY.mid}` });
+    await panel.getByRole("checkbox", { name: "이 페이지 제품 모두 고르기" }).check();
+    await panel.getByRole("button", { name: /^선택 삭제/ }).click();
+    await page
+      .getByRole("dialog", { name: "제품 삭제" })
+      .getByRole("button", { name: "삭제" })
+      .click();
+    await page
+      .getByRole("dialog", { name: "삭제 완료" })
+      .getByRole("button", { name: "확인" })
+      .click();
+    await expect(panel.getByText("이 분류에 연결된 제품이 없습니다.")).toBeVisible();
+    await panel.getByRole("button", { name: "닫기" }).click();
+
+    // 수량이 0 이 되어 숫자 버튼이 사라지고, 이제 지울 수 있다
+    await expect(midRow.getByRole("button", { name: /제품 \d+개 보기/ })).toHaveCount(0);
+    await midRow.getByRole("button", { name: "삭제" }).click();
+    await page
+      .getByRole("dialog", { name: "분류 삭제" })
+      .getByRole("button", { name: "삭제" })
+      .click();
+    await expect(page.getByRole("dialog", { name: "삭제 완료" })).toBeVisible();
   });
 });
