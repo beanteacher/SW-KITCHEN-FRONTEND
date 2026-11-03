@@ -32,3 +32,11 @@ body {
   background: #ffffff;
   color: var(--color-ink);
 }
+
+/* Tailwind 4 는 버튼에 손가락 커서를 주지 않는다. 누를 수 있는 버튼은 손가락, 잠긴 버튼은 각 부품이 정한다 */
+@layer base {
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+}
