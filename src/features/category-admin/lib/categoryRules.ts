@@ -53,7 +53,7 @@ export function getDeleteBlockReason(category: CategoryDto.AdminTree) {
     return `"${category.name}" 아래에 중분류가 ${childCount}개 있어 삭제할 수 없습니다. 중분류를 먼저 삭제해 주세요.`;
   }
   if (productCount > 0) {
-    return `"${category.name}"에 제품 ${productCount}개가 연결되어 있어 삭제할 수 없습니다. 제품의 분류를 먼저 바꿔 주세요.`;
+    return `"${category.name}"에 제품 ${productCount}개가 연결되어 있어 삭제할 수 없습니다. [제품 보기]에서 제품을 삭제하거나, 제품의 분류를 바꿔 주세요.`;
   }
   return null;
 }

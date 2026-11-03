@@ -5,7 +5,11 @@ import { useAdminCategoryTree, type CategoryDto } from "@/entities/category";
 import { ApiError, toApiError } from "@/shared/api";
 import { toast } from "@/shared/lib";
 import { getDeleteBlockReason, moveCategory } from "../lib/categoryRules";
-import type { AlertState, CategoryAdminPageReturn } from "./client/categoryAdminTypes";
+import type {
+  AlertState,
+  CategoryAdminPageReturn,
+  ProductsTarget,
+} from "./client/categoryAdminTypes";
 import { useChangeCategoryOrder, useDeleteCategory } from "./useCategoryAdminQueries";
 import { useCategorySearchParams } from "./useCategorySearchParams";
 
@@ -17,6 +21,7 @@ export function useCategoryAdminActions(): CategoryAdminPageReturn {
   const { mutate: remove } = useDeleteCategory();
   const [editingId, setEditingId] = useState<number | null>(null);
   const [alert, setAlert] = useState<AlertState | null>(null);
+  const [productsTarget, setProductsTarget] = useState<ProductsTarget | null>(null);
 
   const categories = data ?? [];
   // 주소의 대분류가 없거나 지워졌으면 첫 대분류를 고른다. 첫 대분류를 추가하면 그게 골라진다
@@ -42,11 +47,30 @@ export function useCategoryAdminActions(): CategoryAdminPageReturn {
       );
     };
 
+  // 대분류면 아래 모든 중분류 제품, 중분류면 그 중분류 제품을 옆 패널에 연다
+  const handleShowProducts = (category: CategoryDto.AdminTree) => {
+    const parent = categories.find((item) =>
+      item.children?.some((child) => child.id === category.id),
+    );
+    setAlert(null);
+    setProductsTarget({ id: category.id, name: category.name ?? "", parentName: parent?.name });
+  };
+
   // 지울 수 없는 이유를 먼저 알려 주고, 지울 수 있으면 한 번 더 묻는다
+  // 제품 때문에 막혔으면 [제품 보기]로 옆 패널에서 바로 지울 수 있게 한다
   const handleDelete = (category: CategoryDto.AdminTree) => {
     const blockReason = getDeleteBlockReason(category);
     if (blockReason) {
-      setAlert({ kind: "warning", title: "삭제 불가", message: blockReason });
+      const blockedByProducts =
+        (category.children?.length ?? 0) === 0 && (category.productCount ?? 0) > 0;
+      setAlert({
+        kind: "warning",
+        title: "삭제 불가",
+        message: blockReason,
+        extraAction: blockedByProducts
+          ? { label: "제품 보기", onClick: () => handleShowProducts(category) }
+          : undefined,
+      });
       return;
     }
     setAlert({
@@ -76,16 +100,19 @@ export function useCategoryAdminActions(): CategoryAdminPageReturn {
     isLoading: isPending,
     isError,
     alert,
+    productsTarget,
     panelHandlers: {
       editingId,
       isMoving,
       onEdit: setEditingId,
       onDelete: handleDelete,
+      onShowProducts: handleShowProducts,
       onDone: showDone,
     },
     handleRetry: () => void refetch(),
     handleSelectBig,
     handleMove,
     handleCloseAlert: () => setAlert(null),
+    handleCloseProducts: () => setProductsTarget(null),
   };
 }

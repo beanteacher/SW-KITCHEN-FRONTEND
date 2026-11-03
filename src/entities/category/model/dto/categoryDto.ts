@@ -1,5 +1,14 @@
 export * as CategoryDto from "./categoryDto";
 
+// 분류 트리 한 줄 (이름·약어·순서만). 대분류만 children 을 가지고 중분류는 빈 배열이다
+export interface Tree {
+  id: number;
+  name?: string;
+  abbr?: string;
+  sortOrder?: number;
+  children?: Tree[];
+}
+
 // 관리 화면 분류 트리 한 줄. 대분류만 children 을 가지고 중분류는 빈 배열이다
 // productCount 는 연결된 제품 수이고, 대분류는 아래 중분류 합이다
 export interface AdminTree {

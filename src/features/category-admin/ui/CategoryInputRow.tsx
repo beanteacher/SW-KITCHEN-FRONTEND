@@ -124,7 +124,7 @@ export default function CategoryInputRow({
           <p className="mt-1 text-left text-[11px] text-gray-400">제품 있음 · 못 바꿈</p>
         )}
       </AdminTd>
-      <AdminTd className="text-right tabular-nums">{productCount}</AdminTd>
+      <AdminTd className="tabular-nums">{productCount}</AdminTd>
       <AdminTd className="whitespace-nowrap">
         {editing ? (
           <>

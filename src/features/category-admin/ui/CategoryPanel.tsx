@@ -1,5 +1,6 @@
 "use client";
 
+import { Search } from "lucide-react";
 import type { MouseEvent } from "react";
 import type { CategoryDto } from "@/entities/category";
 import { cn } from "@/shared/lib";
@@ -19,9 +20,40 @@ interface Props extends CategoryPanelHandlers {
   onMove: (id: number, direction: -1 | 1) => void;
 }
 
-function ProductCount({ count }: { count: number }) {
-  if (count === 0) return <span className="text-faint">0</span>;
-  return count.toLocaleString();
+// 연결된 제품 수. 1 이상이면 옆 돋보기 버튼을 누르면 옆 패널에 그 분류의 제품이 열린다
+function ProductCount({
+  category,
+  disabled,
+  onShow,
+}: {
+  category: CategoryDto.AdminTree;
+  disabled?: boolean;
+  onShow?: (category: CategoryDto.AdminTree) => void;
+}) {
+  const count = category.productCount ?? 0;
+  if (count === 0 || !onShow) {
+    return <span className={cn(count === 0 && "text-faint")}>{count.toLocaleString()}</span>;
+  }
+  return (
+    <span className="inline-flex items-center gap-1.5">
+      <span className="min-w-[18px] text-right tabular-nums">{count.toLocaleString()}</span>
+      <AdminButton
+        size="icon"
+        variant="outline"
+        className="size-6 hover:border-[#2357c6] hover:bg-picked hover:text-[#2357c6]"
+        title="제품 보기"
+        aria-label={`${category.name} 제품 ${count}개 보기`}
+        disabled={disabled}
+        onClick={(event) => {
+          // Safari 는 눌러도 버튼에 초점을 주지 않아, 패널을 닫은 뒤 돌아올 자리가 없다. 직접 준다
+          event.currentTarget.focus();
+          onShow(category);
+        }}
+      >
+        <Search className="size-[13px]" strokeWidth={2.2} aria-hidden />
+      </AdminButton>
+    </span>
+  );
 }
 
 export default function CategoryPanel({
@@ -34,6 +66,7 @@ export default function CategoryPanel({
   onEdit,
   onMove,
   onDelete,
+  onShowProducts,
   onDone,
 }: Props) {
   const { mutateAsync: create } = useCreateCategory();
@@ -105,7 +138,7 @@ export default function CategoryPanel({
             <col className="w-[72px]" />
             <col />
             <col className={parent ? "w-[120px]" : "w-[96px]"} />
-            <col className="w-[64px]" />
+            <col className="w-[76px]" />
             <col className="w-[100px]" />
           </colgroup>
           <thead>
@@ -115,7 +148,7 @@ export default function CategoryPanel({
               <AdminTh title="상품 코드 앞자리에 쓰는 영문 대문자 2자">
                 {parent ? "약어 · 코드 앞자리" : "약어"}
               </AdminTh>
-              <AdminTh title="이 분류에 연결된 제품 수">제품 수</AdminTh>
+              <AdminTh title="이 분류에 연결된 제품 수">수량</AdminTh>
               <AdminTh>관리</AdminTh>
             </tr>
           </thead>
@@ -145,7 +178,7 @@ export default function CategoryPanel({
                     siblings={categories}
                     editing={{ category, abbrLocked: (category.productCount ?? 0) > 0 }}
                     order={moveButtons(category, index)}
-                    productCount={<ProductCount count={category.productCount ?? 0} />}
+                    productCount={<ProductCount category={category} />}
                     selected={selected}
                     onSubmit={handleEdit(category)}
                     onCancel={() => onEdit(null)}
@@ -186,8 +219,12 @@ export default function CategoryPanel({
                       <span className="text-faint"> · {getCodePrefix(parent, category)}</span>
                     )}
                   </AdminTd>
-                  <AdminTd className="text-right tabular-nums">
-                    <ProductCount count={category.productCount ?? 0} />
+                  <AdminTd>
+                    <ProductCount
+                      category={category}
+                      disabled={isEditing}
+                      onShow={onShowProducts}
+                    />
                   </AdminTd>
                   <AdminTd className="whitespace-nowrap">
                     <AdminButton

@@ -41,6 +41,8 @@ test("로그인한 뒤 쇼핑몰 머리글은 [로그아웃]", async ({ page }) 
 
 test("액세스 토큰이 만료돼도 리프레시 토큰으로 이어서 쓴다", async ({ page, context }) => {
   await login(page);
+  // 로그인 뒤 첫 화면(제품 관리)의 요청이 끝나길 기다린다. 도중에 토큰을 지우면 두 화면이 함께 재발급을 요청해 하나가 진다
+  await expect(page.getByText(/검색 결과|등록한 제품이 없습니다/)).toBeVisible();
   // 30분이 지난 상황: 액세스 토큰만 없앤다
   await context.clearCookies({ name: "access_token" });
 
@@ -65,6 +67,8 @@ test("로그아웃하면 쿠키가 지워지고, 관리 화면은 로그인 화�
   );
   await page.getByRole("banner").getByRole("button", { name: "로그아웃" }).click();
   await reloaded;
+  // 목록은 응답 머리가 온 뒤에도 나눠서 계속 받는다. 다 받기 전에 떠나면 WebKit 이 끊긴 스트림을 오류로 남긴다
+  await page.waitForLoadState("networkidle");
 
   await expect(headerButton(page)).toHaveText(/로그인/);
   expect(await context.cookies()).toHaveLength(0);

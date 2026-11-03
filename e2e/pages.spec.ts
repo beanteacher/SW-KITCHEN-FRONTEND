@@ -4,7 +4,7 @@ import { expect, test } from "./fixtures";
 const PUBLIC_PAGES = [
   ["/product/new", "신제품"],
   ["/product/stock", "재고·중고품"],
-  ["/search?keyword=냉장고", "검색 결과"],
+  ["/search?keyword=냉장고", "‘냉장고’ 검색 결과"],
   ["/login", "로그인"],
 ] as const;
 
