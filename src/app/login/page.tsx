@@ -8,9 +8,9 @@ export default function LoginPage() {
     <div className="min-h-screen bg-[#fafafa]">
       <div className="mx-auto flex min-h-screen w-full max-w-[600px] flex-col bg-white">
         <header className="flex h-[52px] items-center bg-[#f5f5f5] px-4">
-          <h1 className="text-base font-medium">로그인</h1>
+          <h1 className="text-base font-medium">로그인/회원가입</h1>
         </header>
-        <main className="px-4 pt-[50px]">
+        <main className="px-4 pt-[50px] pb-16">
           <Link
             href="/"
             className="mx-auto mb-10 block w-fit text-xl leading-6 font-extrabold tracking-[-0.5px]"

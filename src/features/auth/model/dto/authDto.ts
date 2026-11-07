@@ -13,6 +13,8 @@ export interface Me {
 export interface LoginForm {
   userId: string;
   password: string;
+  // 5번 틀린 아이디만 필요하다
+  captchaToken?: string;
 }
 
 export interface LoginResult extends Me {
