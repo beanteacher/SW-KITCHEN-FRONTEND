@@ -124,7 +124,12 @@ export default function LoginForm() {
         open={pendingPath !== null}
         kind="notice"
         title="비밀번호 변경 권장"
-        onClose={() => pendingPath && router.replace(pendingPath)}
+        onClose={() => {
+          if (!pendingPath) return;
+          // Next 가 이 화면을 숨겨 두었다가 다시 보여 줄 때 창이 다시 열리지 않게 비운다
+          setPendingPath(null);
+          router.replace(pendingPath);
+        }}
       >
         처음 받은 비밀번호를 쓰고 있습니다. 비밀번호를 바꿔 주세요.
       </AlertDialog>
