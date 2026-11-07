@@ -162,12 +162,13 @@ export default function StaffManager({ myId }: Props) {
       <AdminTable>
         <table className="w-full table-fixed border-collapse text-[13px]">
           <colgroup>
-            <col className="w-16" />
+            {/* 1024px 에서도 넘치지 않게 시안 너비를 쓴다. 아이디·이름이 남는 폭을 나눈다 */}
+            <col className="w-[60px]" />
             <col />
-            <col className="w-[120px]" />
-            <col className="w-[130px]" />
+            <col />
+            <col className="w-[112px]" />
             <col className="w-20" />
-            <col className="w-[110px]" />
+            <col className="w-[104px]" />
             <col className="w-[236px]" />
           </colgroup>
           <thead>
