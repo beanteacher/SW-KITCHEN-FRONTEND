@@ -2,9 +2,11 @@ export * as AuthDto from "./authDto";
 
 export type Role = "CUSTOMER" | "STAFF" | "ADMIN";
 
+// 소셜로만 가입한 고객은 userId 가 없다
 export interface Me {
   id: number;
-  userId?: string;
+  userId?: string | null;
+  name?: string;
   role?: Role;
 }
 
