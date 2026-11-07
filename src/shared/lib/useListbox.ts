@@ -44,7 +44,8 @@ export function useListbox<V>(
   const choose = (index: number) => {
     const item = items[index];
     if (!item || item.disabled) return;
-    onChange(item.value);
+    // 같은 값을 다시 고르면 닫기만 한다
+    if (item.value !== value) onChange(item.value);
     setOpen(false);
   };
 

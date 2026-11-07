@@ -1,13 +1,12 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Eye, EyeOff } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState, type ReactNode } from "react";
 import { useForm } from "react-hook-form";
 import { ApiError } from "@/shared/api";
 import { cn } from "@/shared/lib";
-import { AlertDialog } from "@/shared/ui";
+import { AlertDialog, PasswordToggle } from "@/shared/ui";
 import { getAfterLoginPath } from "../lib/redirect";
 import { AuthSchema } from "../model/schema/authSchema";
 import { useLogin } from "../model/useAuthQueries";
@@ -100,19 +99,10 @@ export default function LoginForm() {
               placeholder="비밀번호"
               className={INPUT_CLASS}
             />
-            <button
-              type="button"
-              onClick={() => setShowPassword((shown) => !shown)}
-              aria-label={showPassword ? "비밀번호 숨기기" : "비밀번호 보기"}
-              className="grid w-9 place-items-center text-placeholder"
-            >
-              {/* 아이콘은 지금 상태를 보여준다: 가려져 있으면 감은 눈, 보이면 뜬 눈 (무신사와 같음) */}
-              {showPassword ? (
-                <Eye className="size-5" strokeWidth={1.6} aria-hidden />
-              ) : (
-                <EyeOff className="size-5" strokeWidth={1.6} aria-hidden />
-              )}
-            </button>
+            <PasswordToggle
+              shown={showPassword}
+              onToggle={() => setShowPassword((shown) => !shown)}
+            />
           </FieldBox>
           {errors.password && <FieldMessage>{errors.password.message}</FieldMessage>}
         </div>

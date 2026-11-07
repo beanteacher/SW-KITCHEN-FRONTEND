@@ -3,7 +3,7 @@
 import { Controller, useFormContext, useWatch } from "react-hook-form";
 import { calcSalePrice, type ProductDto } from "@/entities/product";
 import { cn, formatPrice } from "@/shared/lib";
-import { AdminButton, AdminFieldError, AdminInput, AdminTd } from "@/shared/ui/admin";
+import { AdminButton, AdminFieldError, AdminInput, AdminSegment, AdminTd } from "@/shared/ui/admin";
 import { PRODUCT_FIELD_CLASS } from "../config/fieldClass";
 import type { ProductSchema } from "../model/schema/productSchema";
 import DigitsInput from "./DigitsInput";
@@ -170,20 +170,14 @@ export default function OptionRow({
                 />
               )}
             />
-            <div role="group" aria-label={`${index + 1}번 할인 종류`} className="flex">
-              {DISCOUNT_TYPES.map(({ value, label }) => (
-                <button
-                  key={value}
-                  type="button"
-                  aria-pressed={option.discountType === value}
-                  disabled={removed}
-                  onClick={() => handleDiscountType(value)}
-                  className="h-8 flex-1 cursor-pointer border border-l-0 border-admin-border bg-white p-0 text-xs text-[#555] first:rounded-l-[2px] first:border-l last:rounded-r-[2px] disabled:cursor-default aria-pressed:border-ink aria-pressed:bg-ink aria-pressed:font-semibold aria-pressed:text-white"
-                >
-                  {label}
-                </button>
-              ))}
-            </div>
+            <AdminSegment
+              fill
+              aria-label={`${index + 1}번 할인 종류`}
+              options={DISCOUNT_TYPES}
+              value={option.discountType}
+              onChange={handleDiscountType}
+              disabled={removed}
+            />
           </div>
           {error?.discountValue && <AdminFieldError>{error.discountValue.message}</AdminFieldError>}
         </AdminTd>
