@@ -14,9 +14,35 @@ export default function HeaderAuth() {
 
   if (me) {
     return (
-      <button type="button" onClick={() => logout()} disabled={isPending} className={BUTTON_CLASS}>
-        로그아웃
-      </button>
+      <>
+        {/* 고객만 [마이]. 직원은 마이페이지가 없다 */}
+        {me.role === "CUSTOMER" && (
+          <Link
+            href="/my"
+            className="flex h-full items-center gap-0.5 px-1 text-xs font-medium text-white/80 xl:px-1.5 xl:text-sm"
+          >
+            <svg
+              viewBox="0 0 16 16"
+              fill="none"
+              stroke="currentColor"
+              className="hidden size-4 xl:block"
+              aria-hidden
+            >
+              <circle cx="8" cy="5.5" r="2.8" />
+              <path d="M2.8 14c.6-2.7 2.7-4.3 5.2-4.3s4.6 1.6 5.2 4.3" />
+            </svg>
+            마이
+          </Link>
+        )}
+        <button
+          type="button"
+          onClick={() => logout()}
+          disabled={isPending}
+          className={BUTTON_CLASS}
+        >
+          로그아웃
+        </button>
+      </>
     );
   }
 
