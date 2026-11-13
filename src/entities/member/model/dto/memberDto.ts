@@ -29,3 +29,21 @@ export interface Staff {
   status?: AccountStatus;
   createdAt?: string;
 }
+
+// 본인확인 목적. 가입은 만 14세를 보고, 찾기·번호 변경은 보지 않는다
+export type VerificationPurpose = "SIGNUP" | "FIND" | "PHONE_CHANGE";
+
+// 같은 사람의 계정이 이미 있을 때. 소셜로만 가입했으면 maskedUserId 가 없다
+export interface ExistingAccount {
+  maskedUserId?: string | null;
+  linkedProviders?: SocialProvider[];
+  createdAt?: string;
+}
+
+// 방금 본인확인한 본인에게만 보여주는 값
+export interface VerifiedIdentity {
+  name: string;
+  birthDate: string;
+  phone: string;
+  existingAccount?: ExistingAccount | null;
+}

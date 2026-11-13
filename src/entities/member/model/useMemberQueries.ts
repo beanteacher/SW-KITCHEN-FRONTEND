@@ -1,6 +1,9 @@
 "use client";
 
-import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useMutation, useQuery } from "@tanstack/react-query";
+import { useEffect } from "react";
+import { ApiError } from "@/shared/api";
+import { loadPortOne, requestIdentityVerification } from "@/shared/lib";
 import { MemberApi } from "../api/memberApi";
 import type { MemberDto } from "./dto/memberDto";
 
@@ -23,4 +26,27 @@ export const useAdminMembers = (params: MemberDto.AdminSearchParams) => {
 
 export const useStaffList = () => {
   return useQuery({ queryKey: memberKeys.staff(), queryFn: MemberApi.staffList });
+};
+
+export const IDENTITY_CANCELLED = "IDENTITY_CANCELLED";
+
+// 업체 창을 열어 본인인증을 받고 서버에 넘긴다. 창을 닫으면 IDENTITY_CANCELLED 오류로 끝난다
+// 업체 창은 누른 순간에 열려야 해서 업체 스크립트를 화면이 뜰 때 미리 받는다
+export const useVerifyIdentity = (purpose: MemberDto.VerificationPurpose) => {
+  useEffect(() => {
+    loadPortOne().catch(() => undefined);
+  }, []);
+
+  return useMutation({
+    mutationFn: async () => {
+      const id = await requestIdentityVerification();
+      if (!id)
+        throw new ApiError(
+          0,
+          IDENTITY_CANCELLED,
+          "본인확인을 마치지 못했습니다. 다시 시도해 주세요.",
+        );
+      return MemberApi.verifyIdentity(id, purpose);
+    },
+  });
 };

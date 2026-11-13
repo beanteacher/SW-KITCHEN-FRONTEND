@@ -1,8 +1,10 @@
 import { cn } from "@/shared/lib";
+import type { MemberDto } from "../model/dto/memberDto";
 
 // 카카오 노랑·네이버 초록 (각 회사 디자인 규칙의 색과 로고)
 const PROVIDERS = {
   kakao: {
+    name: "카카오",
     label: "카카오로 시작하기",
     className: "border-[#fee500] bg-[#fee500] text-black",
     icon: (
@@ -15,6 +17,7 @@ const PROVIDERS = {
     ),
   },
   naver: {
+    name: "네이버",
     label: "네이버로 시작하기",
     className: "border-[#03c75a] bg-[#03c75a] text-white",
     icon: (
@@ -26,6 +29,11 @@ const PROVIDERS = {
 };
 
 export type SocialProviderPath = keyof typeof PROVIDERS;
+
+// 서버 값(KAKAO) → 주소 값(kakao)
+export function socialProviderPath(provider: MemberDto.SocialProvider): SocialProviderPath {
+  return provider === "KAKAO" ? "kakao" : "naver";
+}
 
 export const SOCIAL_BUTTON_CLASS =
   "flex h-10 items-center justify-center gap-1.5 rounded-[4px] border border-[#e0e0e0] text-sm font-medium";
@@ -46,9 +54,15 @@ export function socialLoginHref(
 interface Props {
   providers?: SocialProviderPath[];
   returnUrl?: string;
+  // 버튼 글자. 기본은 "카카오로 시작하기", 찾기 화면은 "카카오로 로그인"
+  verb?: string;
 }
 
-export default function SocialLoginButtons({ providers = ["kakao", "naver"], returnUrl }: Props) {
+export default function SocialLoginButtons({
+  providers = ["kakao", "naver"],
+  returnUrl,
+  verb,
+}: Props) {
   return (
     <>
       {providers.map((provider) => (
@@ -58,7 +72,7 @@ export default function SocialLoginButtons({ providers = ["kakao", "naver"], ret
           className={cn(SOCIAL_BUTTON_CLASS, PROVIDERS[provider].className)}
         >
           {PROVIDERS[provider].icon}
-          {PROVIDERS[provider].label}
+          {verb ? `${PROVIDERS[provider].name}로 ${verb}` : PROVIDERS[provider].label}
         </a>
       ))}
     </>

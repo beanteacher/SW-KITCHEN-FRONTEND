@@ -13,3 +13,8 @@ export function formatPrice(value: number) {
 export function formatDate(value: string) {
   return new Intl.DateTimeFormat("sv-SE", { timeZone: "Asia/Seoul" }).format(new Date(value));
 }
+
+// "01012345678" → "010-1234-5678". 모양이 다르면 그대로 둔다
+export function formatPhone(value: string) {
+  return value.replace(/^(01\d)(\d{3,4})(\d{4})$/, "$1-$2-$3");
+}

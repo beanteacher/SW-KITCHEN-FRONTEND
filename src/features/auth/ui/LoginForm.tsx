@@ -3,11 +3,18 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState, type ReactNode } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { SOCIAL_BUTTON_CLASS, SocialLoginButtons } from "@/entities/member";
 import { ApiError } from "@/shared/api";
 import { cn } from "@/shared/lib";
-import { AlertDialog, PasswordToggle } from "@/shared/ui";
+import {
+  AlertDialog,
+  standaloneButtonClass,
+  StoreFieldMessage,
+  StoreInput,
+  StorePasswordInput,
+} from "@/shared/ui";
 import {
   LOGIN_ERROR_MESSAGE,
   LOGIN_FALLBACK_MESSAGE,
@@ -16,36 +23,12 @@ import {
 import { getAfterLoginPath } from "../lib/redirect";
 import { AuthSchema } from "../model/schema/authSchema";
 import { useLogin } from "../model/useAuthQueries";
-import SocialLoginButtons, { SOCIAL_BUTTON_CLASS } from "./SocialLoginButtons";
 import Turnstile from "./Turnstile";
-
-// 무신사 로그인 실측: 36px 칸, 회색 테두리, 둥글기 4. 오류는 빨간 테두리 + 칸 아래 11px 글씨
-function FieldBox({ invalid, children }: { invalid: boolean; children: ReactNode }) {
-  return (
-    <div
-      className={cn(
-        "flex h-9 rounded-[4px] border",
-        // 오류가 있으면 초점이 있어도 빨간 테두리를 그대로 둔다
-        invalid ? "border-store-danger" : "border-[#e0e0e0] focus-within:border-black",
-      )}
-    >
-      {children}
-    </div>
-  );
-}
-
-const INPUT_CLASS =
-  "h-full min-w-0 flex-1 rounded-[4px] bg-transparent px-2 text-sm outline-none placeholder:text-placeholder";
-
-function FieldMessage({ children }: { children: ReactNode }) {
-  return <p className="mx-0.5 mt-1.5 text-[11px] leading-[14px] text-store-danger">{children}</p>;
-}
 
 export default function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { mutate: login, isPending, error } = useLogin();
-  const [showPassword, setShowPassword] = useState(false);
   // 처음 받은 비밀번호면 안내를 보여준 뒤 이동한다
   const [pendingPath, setPendingPath] = useState<string | null>(null);
   // 5번 틀린 아이디로 다시 시도하면 서버가 보안문자를 요구한다. 풀면 같은 아이디·비밀번호로 다시 보낸다
@@ -95,37 +78,27 @@ export default function LoginForm() {
     <>
       {/* 화면 코드가 뜨기 전에 눌려도 아이디·비밀번호가 주소창(GET)에 붙지 않게 POST 로 둔다 */}
       <form method="post" onSubmit={handleSubmit((values) => onSubmit(values))} noValidate>
+        {/* 무신사 로그인 실측: 36px 칸, 회색 테두리, 둥글기 4. 오류는 빨간 테두리 + 칸 아래 11px 글씨 */}
         <div className="mb-3">
-          <FieldBox invalid={Boolean(errors.userId)}>
-            <input
-              {...register("userId")}
-              autoFocus
-              autoComplete="username"
-              aria-label="아이디"
-              aria-invalid={Boolean(errors.userId)}
-              placeholder="아이디"
-              className={INPUT_CLASS}
-            />
-          </FieldBox>
-          {errors.userId && <FieldMessage>{errors.userId.message}</FieldMessage>}
+          <StoreInput
+            {...register("userId")}
+            tone={errors.userId ? "error" : "default"}
+            autoFocus
+            autoComplete="username"
+            aria-label="아이디"
+            placeholder="아이디"
+          />
+          {errors.userId && <StoreFieldMessage>{errors.userId.message}</StoreFieldMessage>}
         </div>
         <div className="mb-3">
-          <FieldBox invalid={Boolean(errors.password)}>
-            <input
-              {...register("password")}
-              type={showPassword ? "text" : "password"}
-              autoComplete="current-password"
-              aria-label="비밀번호"
-              aria-invalid={Boolean(errors.password)}
-              placeholder="비밀번호"
-              className={INPUT_CLASS}
-            />
-            <PasswordToggle
-              shown={showPassword}
-              onToggle={() => setShowPassword((shown) => !shown)}
-            />
-          </FieldBox>
-          {errors.password && <FieldMessage>{errors.password.message}</FieldMessage>}
+          <StorePasswordInput
+            {...register("password")}
+            tone={errors.password ? "error" : "default"}
+            autoComplete="current-password"
+            aria-label="비밀번호"
+            placeholder="비밀번호"
+          />
+          {errors.password && <StoreFieldMessage>{errors.password.message}</StoreFieldMessage>}
         </div>
         {captchaFor && <Turnstile onVerify={(token) => onSubmit(captchaFor, token)} />}
         {failMessage && (
@@ -136,7 +109,7 @@ export default function LoginForm() {
         <button
           type="submit"
           disabled={isPending}
-          className="mt-[18px] h-11 w-full rounded-[4px] border border-black bg-black text-sm font-medium text-white disabled:opacity-40"
+          className={cn(standaloneButtonClass(), "mt-[18px] disabled:opacity-40")}
         >
           {isPending ? "로그인 중…" : "로그인"}
         </button>
