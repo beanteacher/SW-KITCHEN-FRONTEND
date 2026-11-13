@@ -9,6 +9,8 @@ export { default as RefreshErrorView } from "./RefreshErrorView";
 export { default as Pagination } from "./Pagination";
 export { default as Select, type SelectOption } from "./Select";
 export { default as StandalonePage, standaloneButtonClass } from "./StandalonePage";
+export { default as StandaloneHeading } from "./StandaloneHeading";
+export { default as StandaloneResult } from "./StandaloneResult";
 export {
   StoreField,
   StoreFieldMessage,

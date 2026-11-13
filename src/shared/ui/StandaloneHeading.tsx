@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 
-// 단계 제목 18px + 안내 한 줄 13px
-export default function SignupHeading({
+// 따로 뜨는 화면(가입·찾기)의 제목 18px + 안내 한 줄 13px
+export default function StandaloneHeading({
   title,
   children,
 }: {

@@ -21,3 +21,7 @@ export const verifyIdentity = (
     method: "post",
     json: { identityVerificationId, purpose },
   });
+
+// 아이디를 쓸 수 있는지 (가입 중복 확인, 비밀번호 재설정의 아이디 확인)
+export const checkUserId = (userId: string) =>
+  apiRequest<{ available: boolean }>("member/user-id-check", { searchParams: { userId } });

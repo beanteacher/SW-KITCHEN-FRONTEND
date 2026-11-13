@@ -6,10 +6,6 @@ export interface Agreements {
   marketing: boolean;
 }
 
-export interface UserIdCheck {
-  available: boolean;
-}
-
 export interface SignupForm {
   userId: string;
   password: string;

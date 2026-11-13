@@ -14,6 +14,8 @@ import {
 import { ApiError } from "@/shared/api";
 import {
   StandalonePage,
+  StandaloneHeading,
+  StandaloneResult,
   standaloneButtonClass,
   StoreField,
   StoreFieldMessage,
@@ -22,8 +24,6 @@ import {
 import type { SignupDto } from "../model/dto/signupDto";
 import { useSocialLink, useSocialSignup } from "../model/useSignupActions";
 import AccountChip from "./AccountChip";
-import ResultView from "./ResultView";
-import SignupHeading from "./SignupHeading";
 import SignupSteps from "./SignupSteps";
 import TermsAgreement, { REQUIRED_AGREED } from "./TermsAgreement";
 
@@ -131,20 +131,20 @@ export default function SocialSignupFlow() {
                 <StoreFieldMessage>{termsError}</StoreFieldMessage>
               </div>
             )}
-            <SignupHeading title={`${providerName}로 시작하기`}>
+            <StandaloneHeading title={`${providerName}로 시작하기`}>
               {providerName} 로그인을 마쳤습니다. 약관에 동의하고 본인확인을 하면 가입됩니다.
-            </SignupHeading>
+            </StandaloneHeading>
             <TermsAgreement value={agreements} onChange={setAgreements} />
           </>
         );
       case "link":
         return (
           <div className="pt-2">
-            <SignupHeading title="이미 가입된 계정이 있습니다">
+            <StandaloneHeading title="이미 가입된 계정이 있습니다">
               본인확인한 분의 계정이 있습니다.{" "}
               {step.account.maskedUserId && "비밀번호를 한 번 확인하면 "}이 {providerName} 계정을
               연결하고, 다음부터 {providerName}로 바로 로그인됩니다.
-            </SignupHeading>
+            </StandaloneHeading>
             <div className="mb-[18px]">
               <AccountChip account={step.account} />
             </div>
@@ -179,18 +179,18 @@ export default function SocialSignupFlow() {
         );
       case "expired":
         return (
-          <ResultView
+          <StandaloneResult
             title="시간이 지났습니다"
             actions={<SocialLoginButtons providers={[provider]} verb="다시 시작하기" />}
           >
             {providerName} 로그인 뒤 10분이 지나 가입을 이어 갈 수 없습니다.
             <br />
             처음부터 다시 시작해 주세요.
-          </ResultView>
+          </StandaloneResult>
         );
       case "done":
         return (
-          <ResultView
+          <StandaloneResult
             title={step.title}
             actions={
               <button
@@ -205,7 +205,7 @@ export default function SocialSignupFlow() {
             {step.name && `${step.name}님, 환영합니다.`}
             <br />
             로그인된 상태로 쇼핑을 이어 갑니다.
-          </ResultView>
+          </StandaloneResult>
         );
     }
   };

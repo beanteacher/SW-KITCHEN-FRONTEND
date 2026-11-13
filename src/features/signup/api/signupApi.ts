@@ -5,9 +5,6 @@ export * as SignupApi from "./signupApi";
 
 const BASE_URL = "member";
 
-export const checkUserId = (userId: string) =>
-  apiRequest<SignupDto.UserIdCheck>(`${BASE_URL}/user-id-check`, { searchParams: { userId } });
-
 // 가입하면 바로 로그인된다 (서버가 토큰 쿠키를 준다)
 export const signup = (data: SignupDto.SignupForm) =>
   apiRequest<SignupDto.LoginResult>(BASE_URL, { method: "post", json: data });

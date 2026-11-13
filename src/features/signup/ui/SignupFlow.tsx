@@ -6,13 +6,17 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { IDENTITY_CANCELLED, type MemberDto, useVerifyIdentity } from "@/entities/member";
 import { ApiError } from "@/shared/api";
-import { StandalonePage, standaloneButtonClass, StoreFieldMessage } from "@/shared/ui";
+import {
+  StandalonePage,
+  StandaloneHeading,
+  StandaloneResult,
+  standaloneButtonClass,
+  StoreFieldMessage,
+} from "@/shared/ui";
 import type { SignupDto } from "../model/dto/signupDto";
 import { useSignup } from "../model/useSignupActions";
 import AccountChip from "./AccountChip";
 import AccountForm, { ACCOUNT_FORM_ID } from "./AccountForm";
-import ResultView from "./ResultView";
-import SignupHeading from "./SignupHeading";
 import SignupSteps from "./SignupSteps";
 import TermsAgreement, { REQUIRED_AGREED } from "./TermsAgreement";
 
@@ -79,9 +83,9 @@ export default function SignupFlow() {
                 <StoreFieldMessage>{termsError}</StoreFieldMessage>
               </div>
             )}
-            <SignupHeading title="성원종합주방 회원가입">
+            <StandaloneHeading title="성원종합주방 회원가입">
               약관에 동의하고 휴대폰 본인확인을 하면 아이디를 만들 수 있습니다.
-            </SignupHeading>
+            </StandaloneHeading>
             <TermsAgreement value={agreements} onChange={setAgreements} />
           </>
         );
@@ -89,9 +93,9 @@ export default function SignupFlow() {
         return (
           <>
             <SignupSteps names={STEP_NAMES} current={2} />
-            <SignupHeading title="아이디·비밀번호 만들기">
+            <StandaloneHeading title="아이디·비밀번호 만들기">
               로그인할 때 쓸 아이디와 비밀번호를 정해 주세요.
-            </SignupHeading>
+            </StandaloneHeading>
             <AccountForm
               verified={step.verified}
               onReadyChange={setAccountReady}
@@ -124,7 +128,7 @@ export default function SignupFlow() {
         );
       case "exists":
         return (
-          <ResultView
+          <StandaloneResult
             title="이미 가입된 계정이 있습니다"
             actions={
               <>
@@ -147,11 +151,11 @@ export default function SignupFlow() {
                 <AccountChip account={step.account} />
               </div>
             )}
-          </ResultView>
+          </StandaloneResult>
         );
       case "underage":
         return (
-          <ResultView
+          <StandaloneResult
             title="만 14세 이상만 가입할 수 있습니다"
             actions={
               <Link href="/product/new" className={standaloneButtonClass("line")}>
@@ -160,11 +164,11 @@ export default function SignupFlow() {
             }
           >
             본인확인 결과 만 14세 미만이라 가입할 수 없습니다.
-          </ResultView>
+          </StandaloneResult>
         );
       case "done":
         return (
-          <ResultView
+          <StandaloneResult
             title="가입을 마쳤습니다"
             actions={
               <button
@@ -179,7 +183,7 @@ export default function SignupFlow() {
             {step.name}님, 환영합니다.
             <br />
             로그인된 상태로 쇼핑을 이어 갑니다.
-          </ResultView>
+          </StandaloneResult>
         );
     }
   };

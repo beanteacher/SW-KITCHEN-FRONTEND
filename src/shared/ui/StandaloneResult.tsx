@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 
-// 가운데 정렬 안내 화면 (완료·이미 가입·만 14세 미만·시간 지남). 버튼은 아래로 쌓는다
-export default function ResultView({
+// 따로 뜨는 화면의 가운데 정렬 안내 (가입 완료·계정 없음·비밀번호 바꿈 등). 버튼은 아래로 쌓는다
+export default function StandaloneResult({
   title,
   children,
   actions,
