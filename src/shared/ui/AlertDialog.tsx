@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 import AdminButton from "./admin/AdminButton";
 import Dialog from "./Dialog";
 
-// 끝난 것(성공)은 창이 아니라 토스트로 알린다 (frontend-feedback 규칙). 그래서 성공 모양은 두지 않는다
+// 끝난 것(성공)은 창이 아니라 토스트로 알린다. 그래서 성공 모양은 두지 않는다
 type AlertKind = "warning" | "notice" | "confirm";
 
 const TITLE_CLASS: Record<AlertKind, string> = {

@@ -39,7 +39,7 @@ test("고객 계정으로 관리 화면에 들어가면 없는 페이지로 보�
       () => false,
     );
 
-  await expect(page.getByText("This page could not be found.")).toBeVisible();
+  await expect(page.getByRole("heading", { name: "페이지를 찾을 수 없습니다." })).toBeVisible();
   await expect(page.getByRole("link", { name: /관리/ })).toHaveCount(0);
   expect(await permissionToastShown).toBe(false);
 });

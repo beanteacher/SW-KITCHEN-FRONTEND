@@ -132,7 +132,7 @@ export default function CategoryPanel({
         </small>
       </h2>
       <AdminTable>
-        {/* 분류 표의 칸은 높이 40, 위아래 여백 4 (분류 관리 시안) */}
+        {/* 분류 표의 칸은 높이 40, 위아래 여백 4 */}
         <table className="w-full table-fixed border-collapse leading-[18px] [&_td]:h-10 [&_td]:py-1">
           <colgroup>
             <col className="w-[72px]" />

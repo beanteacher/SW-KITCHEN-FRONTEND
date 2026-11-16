@@ -1,4 +1,4 @@
-// 로그인 실패 코드 → 비밀번호 칸 아래 한 줄 (C5 7A.2)
+// 로그인 실패 코드 → 비밀번호 칸 아래 한 줄
 export const LOGIN_ERROR_MESSAGE: Record<string, string> = {
   LOGIN_FAILED: "아이디 또는 비밀번호가 맞지 않습니다.",
   CAPTCHA_REQUIRED: "보안문자를 확인해 주세요.",

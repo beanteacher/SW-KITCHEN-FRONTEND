@@ -8,7 +8,7 @@ interface Props {
   children: ReactNode;
 }
 
-// 누른 동작이 실패했을 때 그 영역 위·아래에 남기는 빨간 안내. 다시 하거나 고칠 때까지 남는다 (frontend-feedback 규칙)
+// 누른 동작이 실패했을 때 그 영역 위·아래에 남기는 빨간 안내. 다시 하거나 고칠 때까지 남는다
 export default function AdminErrorNotice({ action, className, children }: Props) {
   return (
     <div

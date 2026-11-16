@@ -167,7 +167,7 @@ export default function StaffManager({ myId }: Props) {
       <AdminTable>
         <table className="w-full table-fixed border-collapse text-[13px]">
           <colgroup>
-            {/* 1024px 에서도 넘치지 않게 시안 너비를 쓴다. 아이디·이름이 남는 폭을 나눈다 */}
+            {/* 1024px 에서도 넘치지 않게 칸 너비를 정해 둔다. 아이디·이름이 남는 폭을 나눈다 */}
             <col className="w-[60px]" />
             <col />
             <col />
