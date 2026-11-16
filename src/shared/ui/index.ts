@@ -6,6 +6,7 @@ export { default as ErrorView } from "./ErrorView";
 export { default as PageTitle } from "./PageTitle";
 export { default as PasswordToggle } from "./PasswordToggle";
 export { default as RefreshErrorView } from "./RefreshErrorView";
+export { default as FreshPage } from "./FreshPage";
 export { default as Pagination } from "./Pagination";
 export { default as Select, type SelectOption } from "./Select";
 export { default as StandalonePage, standaloneButtonClass } from "./StandalonePage";

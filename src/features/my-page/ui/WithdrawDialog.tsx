@@ -46,6 +46,13 @@ export default function WithdrawDialog({
   const providerName = provider ? SOCIAL_PROVIDER_LABEL[provider] : "";
   const canWithdraw = hasPassword ? password.length > 0 : reauthenticated;
 
+  // 닫으면 넣던 비밀번호와 안내를 지운다. 다시 열었을 때 남아 있지 않게
+  const close = () => {
+    setPassword("");
+    setError(null);
+    onClose();
+  };
+
   const handleWithdraw = () => {
     setError(null);
     withdraw(hasPassword ? password : undefined, {
@@ -67,14 +74,14 @@ export default function WithdrawDialog({
   return (
     <Dialog
       open={open}
-      onClose={onClose}
+      onClose={close}
       title="회원 탈퇴"
       actions={
         <>
           <button
             type="button"
             className={cn(standaloneButtonClass("line"), SMALL_BUTTON)}
-            onClick={onClose}
+            onClick={close}
           >
             취소
           </button>
