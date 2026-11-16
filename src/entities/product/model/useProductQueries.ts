@@ -14,10 +14,12 @@ export const productKeys = {
 };
 
 // 수정 화면용 제품 전체. id 가 없으면(등록 화면) 부르지 않는다
+// 수정 화면은 열 때마다 DB 의 값을 새로 받는다 (다른 사람이 고쳤거나, 전에 고치다 떠난 값이 남지 않게)
 export const useAdminProduct = (id: number | null) => {
   return useQuery({
     queryKey: productKeys.adminDetail(id),
     queryFn: id === null ? skipToken : () => ProductApi.adminDetail(id),
+    refetchOnMount: "always",
   });
 };
 

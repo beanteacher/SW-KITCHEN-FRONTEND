@@ -31,16 +31,25 @@ export default function MyInfo({ me, renderPasswordChange }: Props) {
   const { mutate: changePhone, isPending: savingPhone } = useChangePhone();
   const [phoneError, setPhoneError] = useState<string | null>(null);
   const [passwordOpen, setPasswordOpen] = useState(false);
+  const [marketingMessage, setMarketingMessage] = useState<{
+    tone: "ok" | "error";
+    text: string;
+  } | null>(null);
   const [joinedWith] = me.linkedProviders ?? [];
 
-  const handleMarketing = (agreed: boolean) =>
+  // 수신 동의·철회 결과는 법(정보통신망법 시행령 62조의2)이 알리라는 네 가지(보낸 곳·바뀐 내용·날짜·결과)를 줄 아래에 남긴다.
+  // 저절로 사라지는 알림에만 두지 않는다. 실패하면 스위치는 서버 값으로 돌아가고 줄 아래 빨간 글씨
+  const handleMarketing = (agreed: boolean) => {
+    setMarketingMessage(null);
     changeMarketing(agreed, {
       onSuccess: () =>
-        toast(
-          agreed ? "마케팅 정보 수신에 동의했습니다." : "마케팅 정보 수신 동의를 거두었습니다.",
-        ),
-      onError: (error) => toast(error.message, "error"),
+        setMarketingMessage({
+          tone: "ok",
+          text: `성원종합주방 마케팅 정보 수신 ${agreed ? "동의" : "동의 철회"}가 ${formatDate(new Date().toISOString())}에 처리되었습니다.`,
+        }),
+      onError: (error) => setMarketingMessage({ tone: "error", text: error.message }),
     });
+  };
 
   const handlePhone = () => {
     setPhoneError(null);
@@ -91,14 +100,7 @@ export default function MyInfo({ me, renderPasswordChange }: Props) {
                 본인확인으로 변경
               </button>
             </InfoRow>
-            {phoneError && (
-              <p
-                role="alert"
-                className="border-b border-[#ebebeb] px-1 pb-2.5 text-xs text-store-danger sm:pl-[154px]"
-              >
-                {phoneError}
-              </p>
-            )}
+            {phoneError && <RowMessage tone="error">{phoneError}</RowMessage>}
           </div>
           <InfoRow label="연결된 계정">
             {SOCIAL_PROVIDERS.map((provider) =>
@@ -115,14 +117,19 @@ export default function MyInfo({ me, renderPasswordChange }: Props) {
             )}
             <InfoNote>카카오·네이버로 처음 로그인하면 이 계정에 연결됩니다</InfoNote>
           </InfoRow>
-          <InfoRow label="마케팅 정보 수신">
-            <MarketingSwitch
-              checked={Boolean(me.marketingAgreed)}
-              disabled={savingMarketing}
-              onChange={handleMarketing}
-            />
-            <InfoNote>새 제품·할인 소식을 받습니다 (선택)</InfoNote>
-          </InfoRow>
+          <div className={cn(marketingMessage && "[&>div]:border-b-0")}>
+            <InfoRow label="마케팅 정보 수신">
+              <MarketingSwitch
+                checked={Boolean(me.marketingAgreed)}
+                disabled={savingMarketing}
+                onChange={handleMarketing}
+              />
+              <InfoNote>새 제품·할인 소식을 받습니다 (선택)</InfoNote>
+            </InfoRow>
+            {marketingMessage && (
+              <RowMessage tone={marketingMessage.tone}>{marketingMessage.text}</RowMessage>
+            )}
+          </div>
           <InfoRow label="가입일">{me.createdAt && formatDate(me.createdAt)}</InfoRow>
         </dl>
       </section>
@@ -149,5 +156,20 @@ export default function MyInfo({ me, renderPasswordChange }: Props) {
         </section>
       )}
     </>
+  );
+}
+
+// 표 줄 바로 아래 한 줄 (그 줄의 결과·오류). 고치거나 다시 할 때까지 남는다
+function RowMessage({ tone, children }: { tone: "ok" | "error"; children: ReactNode }) {
+  return (
+    <p
+      role={tone === "error" ? "alert" : "status"}
+      className={cn(
+        "border-b border-[#ebebeb] px-1 pb-2.5 text-xs sm:pl-[154px]",
+        tone === "error" ? "text-store-danger" : "text-[#555]",
+      )}
+    >
+      {children}
+    </p>
   );
 }

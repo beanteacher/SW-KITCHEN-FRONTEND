@@ -11,7 +11,7 @@ const NAMES_SHOWN = 5;
 
 // 관리자 알림 창 하나. confirm 은 [취소] [삭제]
 export interface AlertState {
-  kind: "warning" | "success" | "confirm";
+  kind: "warning" | "confirm";
   title: string;
   message: ReactNode;
   onConfirm?: () => void;
@@ -32,6 +32,8 @@ export function useProductListBody(params: ProductDto.AdminSearchParams) {
   const { data, isPending, isError, refetch } = useAdminProducts(params);
   const { mutate: removeProducts, isPending: isDeleting } = useDeleteProducts();
   const [alert, setAlert] = useState<AlertState | null>(null);
+  // 삭제가 서버 오류로 실패하면 [선택 삭제] 줄 아래에 남긴다
+  const [deleteError, setDeleteError] = useState<string | null>(null);
   // 고른 제품은 지금 페이지·조건에서만 유효하다. 조건이 바뀌면 key 가 달라져 고른 것이 풀린다
   const selectionKey = JSON.stringify(params);
   const [selection, setSelection] = useState({ key: selectionKey, ids: new Set<number>() });
@@ -55,6 +57,7 @@ export function useProductListBody(params: ProductDto.AdminSearchParams) {
   const handleDelete = () => {
     const targets = products.filter((product) => picked.has(product.id));
     if (targets.length === 0) return;
+    setDeleteError(null);
     const names = targets.slice(0, NAMES_SHOWN).map((product) => product.name ?? `#${product.id}`);
     if (targets.length > NAMES_SHOWN) names.push(`외 ${targets.length - NAMES_SHOWN}개`);
 
@@ -74,11 +77,7 @@ export function useProductListBody(params: ProductDto.AdminSearchParams) {
           {
             onSuccess: () => {
               setPicked(new Set());
-              setAlert({
-                kind: "success",
-                title: "삭제 완료",
-                message: `제품 ${targets.length}개를 삭제했습니다.`,
-              });
+              toast(`제품 ${targets.length}개를 삭제했습니다.`);
             },
             onError: (error) => {
               if (error instanceof ApiError && error.code === "PRODUCT_IN_USE") {
@@ -95,7 +94,7 @@ export function useProductListBody(params: ProductDto.AdminSearchParams) {
                 });
                 return;
               }
-              toast(toApiError(error).message, "error");
+              setDeleteError(toApiError(error).message);
             },
           },
         );
@@ -113,6 +112,7 @@ export function useProductListBody(params: ProductDto.AdminSearchParams) {
     allPicked,
     isDeleting,
     alert,
+    deleteError,
     handleRetry: () => refetch(),
     handleTogglePick,
     handleTogglePickAll,

@@ -164,9 +164,9 @@ test.describe("관리 화면", () => {
     await expect(ask).toContainText(`${NAME_PREFIX} 지울 제품 1`);
     await ask.getByRole("button", { name: "삭제" }).click();
 
-    const done = page.getByRole("dialog", { name: "삭제 완료" });
-    await expect(done).toContainText("제품 2개를 삭제했습니다.");
-    await done.getByRole("button", { name: "확인" }).click();
+    await expect(
+      page.getByRole("status").filter({ hasText: "제품 2개를 삭제했습니다." }),
+    ).toBeVisible();
     await expect(page.getByText("조건에 맞는 제품이 없습니다.")).toBeVisible();
     const response = await page.request.get(`/api/v1/product/${seeded.toDelete[0]}`);
     expect(response.status()).toBe(404);
@@ -244,10 +244,6 @@ test.describe("분류 관리 옆 패널", () => {
       .getByRole("dialog", { name: "제품 삭제" })
       .getByRole("button", { name: "삭제" })
       .click();
-    await page
-      .getByRole("dialog", { name: "삭제 완료" })
-      .getByRole("button", { name: "확인" })
-      .click();
     await expect(panel.getByText("이 분류에 연결된 제품이 없습니다.")).toBeVisible();
     await panel.getByRole("button", { name: "닫기" }).click();
 
@@ -258,6 +254,8 @@ test.describe("분류 관리 옆 패널", () => {
       .getByRole("dialog", { name: "분류 삭제" })
       .getByRole("button", { name: "삭제" })
       .click();
-    await expect(page.getByRole("dialog", { name: "삭제 완료" })).toBeVisible();
+    await expect(
+      page.getByRole("status").filter({ hasText: "분류를 삭제했습니다." }),
+    ).toBeVisible();
   });
 });

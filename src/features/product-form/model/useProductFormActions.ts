@@ -22,8 +22,6 @@ export interface SaveAlert {
 }
 
 const LIST_PATH = "/admin/product";
-const LEAVE_MESSAGE = "저장하지 않은 내용이 있습니다. 나갈까요?";
-
 // 서버가 칸을 알려 주지 않은 실패를 위쪽 알림 문구로. 저장은 전부 되거나 전부 안 된다
 function toSaveAlert(error: ApiError): SaveAlert {
   if (error.code === "CONCURRENT_MODIFICATION") {
@@ -50,7 +48,8 @@ export function useProductFormActions(initialProduct?: ProductDto.AdminDetail) {
   // 다시 채울 때 올려 구역 안 화면 상태(고른 대분류, 펼친 줄 등)도 새로 시작한다
   const [formKey, setFormKey] = useState(0);
   const [alert, setAlert] = useState<SaveAlert | null>(null);
-  const [savedOpen, setSavedOpen] = useState(false);
+  // [취소]·[목록으로]를 눌렀는데 고친 게 있으면 묻는 창
+  const [leaveOpen, setLeaveOpen] = useState(false);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(ProductSchema.ProductFormSchema),
@@ -107,7 +106,7 @@ export function useProductFormActions(initialProduct?: ProductDto.AdminDetail) {
         {
           onSuccess: (saved) => {
             fillWith(saved);
-            setSavedOpen(true);
+            toast("저장했습니다.");
           },
           onError,
         },
@@ -119,7 +118,7 @@ export function useProductFormActions(initialProduct?: ProductDto.AdminDetail) {
         // 화면은 그대로 두고 주소만 수정 화면으로 바꾼다. 새로 고치면 수정 화면이 열린다
         window.history.replaceState(null, "", `${LIST_PATH}/${saved.id}/edit`);
         fillWith(saved);
-        setSavedOpen(true);
+        toast("등록했습니다.");
       },
       onError,
     });
@@ -137,14 +136,17 @@ export function useProductFormActions(initialProduct?: ProductDto.AdminDetail) {
       setAlert(null);
       toast("다시 불러왔습니다.");
     } catch {
-      toast("다시 불러오지 못했습니다. 잠시 뒤 다시 시도해 주세요.", "error");
+      setAlert({ message: "다시 불러오지 못했습니다. 잠시 뒤 다시 시도해 주세요.", reload: true });
     }
   };
 
   // ponytail: [취소]·[목록으로] 만 확인을 띄운다. 왼쪽 메뉴 링크로 나가는 것은 아직 막지 않는다
   // ponytail: 관리 목록의 검색 조건은 아직 이어받지 않는다. 관리 목록 화면을 만들 때 붙인다
   const handleLeave = () => {
-    if (isDirty && !window.confirm(LEAVE_MESSAGE)) return;
+    if (isDirty) {
+      setLeaveOpen(true);
+      return;
+    }
     router.push(LIST_PATH);
   };
 
@@ -156,13 +158,17 @@ export function useProductFormActions(initialProduct?: ProductDto.AdminDetail) {
     originalSalesType,
     hasReserved,
     alert,
-    savedOpen,
+    leaveOpen,
     errorCount: countFieldErrors(errors),
     isUploading,
     isSaving: isCreating || isEditing,
     handleSave,
     handleReload,
     handleLeave,
-    handleCloseSaved: () => setSavedOpen(false),
+    handleConfirmLeave: () => {
+      setLeaveOpen(false);
+      router.push(LIST_PATH);
+    },
+    handleCancelLeave: () => setLeaveOpen(false),
   };
 }

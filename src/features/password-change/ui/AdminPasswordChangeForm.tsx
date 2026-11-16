@@ -1,12 +1,16 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { ApiError } from "@/shared/api";
 import { toast } from "@/shared/lib";
-import { AlertDialog } from "@/shared/ui";
-import { AdminButton, AdminFormField, AdminPasswordInput, AdminTable } from "@/shared/ui/admin";
+import {
+  AdminButton,
+  AdminErrorNotice,
+  AdminFormField,
+  AdminPasswordInput,
+  AdminTable,
+} from "@/shared/ui/admin";
 import { PasswordChangeSchema } from "../model/schema/passwordChangeSchema";
 import { useChangePassword } from "../model/useChangePassword";
 
@@ -19,7 +23,6 @@ interface Props {
 // 백오피스 비밀번호 변경 (고도몰형 이름 칸 표). 직원 비밀번호는 길이 규칙이 없다
 export default function AdminPasswordChangeForm({ userId }: Props) {
   const { mutate: change, isPending } = useChangePassword();
-  const [done, setDone] = useState(false);
   const {
     register,
     handleSubmit,
@@ -37,14 +40,15 @@ export default function AdminPasswordChangeForm({ userId }: Props) {
       {
         onSuccess: () => {
           reset(EMPTY);
-          setDone(true);
+          toast("비밀번호를 바꿨습니다.");
         },
         onError: (error) => {
           if (error instanceof ApiError && error.code === "PASSWORD_MISMATCH") {
             setError("currentPassword", { message: error.message }, { shouldFocus: true });
             return;
           }
-          toast(error.message, "error");
+          // 칸 하나의 오류가 아니면 [비밀번호 바꾸기] 위에 남긴다
+          setError("root", { message: error.message });
         },
       },
     );
@@ -90,14 +94,12 @@ export default function AdminPasswordChangeForm({ userId }: Props) {
           )}
         </AdminFormField>
       </AdminTable>
+      {errors.root && <AdminErrorNotice className="mt-3">{errors.root.message}</AdminErrorNotice>}
       <div className="mt-3.5 flex justify-center">
         <AdminButton type="submit" className="h-9 min-w-[120px]" disabled={isPending}>
           비밀번호 바꾸기
         </AdminButton>
       </div>
-      <AlertDialog open={done} kind="success" title="변경 완료" onClose={() => setDone(false)}>
-        비밀번호를 바꿨습니다. 다른 기기는 로그아웃됩니다.
-      </AlertDialog>
     </form>
   );
 }

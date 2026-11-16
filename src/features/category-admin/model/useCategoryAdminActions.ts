@@ -32,8 +32,8 @@ export function useCategoryAdminActions(): CategoryAdminPageReturn {
     setBigId(id);
   };
 
-  const showDone = (title: string, message: string) =>
-    setAlert({ kind: "success", title, message });
+  // 순서 바꾸기·삭제가 서버 오류로 실패하면 표 위에 남긴다. 다음 동작을 하면 지운다
+  const [actionError, setActionError] = useState<string | null>(null);
 
   // 누를 때마다 형제 전체 순서를 바로 저장한다
   const handleMove =
@@ -41,9 +41,10 @@ export function useCategoryAdminActions(): CategoryAdminPageReturn {
     (id: number, direction: -1 | 1) => {
       const categoryIds = moveCategory(siblings, id, direction);
       if (!categoryIds) return;
+      setActionError(null);
       changeOrder(
         { parentId, categoryIds },
-        { onError: (error) => toast(toApiError(error).message, "error") },
+        { onError: (error) => setActionError(toApiError(error).message) },
       );
     };
 
@@ -59,6 +60,7 @@ export function useCategoryAdminActions(): CategoryAdminPageReturn {
   // 지울 수 없는 이유를 먼저 알려 주고, 지울 수 있으면 한 번 더 묻는다
   // 제품 때문에 막혔으면 [제품 보기]로 옆 패널에서 바로 지울 수 있게 한다
   const handleDelete = (category: CategoryDto.AdminTree) => {
+    setActionError(null);
     const blockReason = getDeleteBlockReason(category);
     if (blockReason) {
       const blockedByProducts =
@@ -80,14 +82,14 @@ export function useCategoryAdminActions(): CategoryAdminPageReturn {
       onConfirm: () => {
         setAlert(null);
         remove(category.id, {
-          onSuccess: () => showDone("삭제 완료", `"${category.name}" 분류가 삭제되었습니다.`),
+          onSuccess: () => toast(`"${category.name}" 분류를 삭제했습니다.`),
           onError: (error) => {
             // 화면을 연 뒤 그 사이 제품이나 중분류가 생겼을 때
             if (error instanceof ApiError && error.code === "CATEGORY_IN_USE") {
               setAlert({ kind: "warning", title: "삭제 불가", message: error.message });
               return;
             }
-            toast(toApiError(error).message, "error");
+            setActionError(toApiError(error).message);
           },
         });
       },
@@ -100,6 +102,7 @@ export function useCategoryAdminActions(): CategoryAdminPageReturn {
     isLoading: isPending,
     isError,
     alert,
+    actionError,
     productsTarget,
     panelHandlers: {
       editingId,
@@ -107,7 +110,7 @@ export function useCategoryAdminActions(): CategoryAdminPageReturn {
       onEdit: setEditingId,
       onDelete: handleDelete,
       onShowProducts: handleShowProducts,
-      onDone: showDone,
+      onDone: (message) => toast(message),
     },
     handleRetry: () => void refetch(),
     handleSelectBig,

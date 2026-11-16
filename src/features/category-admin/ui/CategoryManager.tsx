@@ -2,7 +2,7 @@
 
 import type { ReactNode } from "react";
 import { AlertDialog, ErrorView, StatusView } from "@/shared/ui";
-import { AdminPageHeader, AdminTable } from "@/shared/ui/admin";
+import { AdminErrorNotice, AdminPageHeader, AdminTable } from "@/shared/ui/admin";
 import type { ProductsTarget } from "../model/client/categoryAdminTypes";
 import { useCategoryAdminActions } from "../model/useCategoryAdminActions";
 import CategoryPanel from "./CategoryPanel";
@@ -40,6 +40,7 @@ export default function CategoryManager({ renderProductsPanel }: Props) {
     handleMove,
     handleCloseAlert,
     handleCloseProducts,
+    actionError,
   } = useCategoryAdminActions();
   // 패널이 없으면 수량은 숫자로만, 막힘 창에는 [제품 보기]를 두지 않는다
   const handlers = renderProductsPanel
@@ -65,6 +66,7 @@ export default function CategoryManager({ renderProductsPanel }: Props) {
   return (
     <>
       <Header />
+      {actionError && <AdminErrorNotice className="mb-4">{actionError}</AdminErrorNotice>}
       {/* 본문이 940px 보다 좁으면 두 표를 위아래로 놓는다 */}
       <div className="grid grid-cols-[repeat(auto-fit,minmax(460px,1fr))] items-start gap-x-5 gap-y-4">
         <CategoryPanel
@@ -95,7 +97,7 @@ export default function CategoryManager({ renderProductsPanel }: Props) {
       </div>
       <AlertDialog
         open={alert !== null}
-        kind={alert?.kind ?? "success"}
+        kind={alert?.kind ?? "warning"}
         title={alert?.title ?? ""}
         onClose={handleCloseAlert}
         onConfirm={alert?.onConfirm}

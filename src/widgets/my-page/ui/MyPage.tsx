@@ -3,10 +3,10 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { authKeys } from "@/features/auth";
 import { MyInfo, MyPageTabs, useMyInfo, WithdrawDialog } from "@/features/my-page";
 import { CustomerPasswordChangeForm } from "@/features/password-change";
 import { ApiError } from "@/shared/api";
-import { toast } from "@/shared/lib";
 import { ErrorView, PageTitle, StatusView } from "@/shared/ui";
 
 // 마이페이지 — 내 정보. 고객만 들어온다. 로그인 안 했으면 로그인 화면으로, 직원이면 관리 화면으로
@@ -52,9 +52,13 @@ export default function MyPage() {
             if (backFromReauth) router.replace(pathname);
           }}
           onDone={() => {
-            queryClient.clear();
-            toast("탈퇴했습니다.");
-            router.replace("/product/new");
+            router.replace("/withdrawn");
+            // 내 데이터는 지우고, 내 정보만 다시 물어 머리글이 바로 [로그인 / 회원가입] 으로 바뀌게 한다.
+            // 전부 지우기(clear)는 머리글이 보던 내 정보까지 떼어 내 다른 화면을 누를 때까지 [로그아웃] 이 남았다
+            queryClient.removeQueries({
+              predicate: (query) => query.queryKey[0] !== authKeys.all[0],
+            });
+            queryClient.resetQueries({ queryKey: authKeys.me() });
           }}
           hasPassword={Boolean(me.hasPassword)}
           provider={me.linkedProviders?.[0]}

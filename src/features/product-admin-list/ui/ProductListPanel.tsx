@@ -3,7 +3,7 @@
 import type { ReactNode } from "react";
 import type { ProductDto } from "@/entities/product";
 import { AlertDialog, Pagination } from "@/shared/ui";
-import { AdminButton, AdminTable } from "@/shared/ui/admin";
+import { AdminButton, AdminErrorNotice, AdminTable } from "@/shared/ui/admin";
 import { useProductListBody } from "../model/useProductListBody";
 import ProductListTable from "./ProductListTable";
 
@@ -54,6 +54,7 @@ export default function ProductListPanel({
     handleTogglePickAll,
     handleDelete,
     handleCloseAlert,
+    deleteError,
   } = useProductListBody(params);
 
   const renderList = () => {
@@ -84,6 +85,7 @@ export default function ProductListPanel({
             선택 삭제{picked.size > 0 && ` (${picked.size})`}
           </AdminButton>
         </div>
+        {deleteError && <AdminErrorNotice className="mb-2">{deleteError}</AdminErrorNotice>}
         <ProductListTable
           products={products}
           picked={picked}
@@ -104,7 +106,7 @@ export default function ProductListPanel({
       {renderList()}
       <AlertDialog
         open={alert !== null}
-        kind={alert?.kind ?? "success"}
+        kind={alert?.kind ?? "warning"}
         title={alert?.title ?? ""}
         onClose={handleCloseAlert}
         onConfirm={alert?.onConfirm}

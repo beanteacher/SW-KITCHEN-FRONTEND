@@ -30,11 +30,11 @@ const panel = (page: Page, name: "대분류" | "중분류") => page.getByRole("r
 const row = (page: Page, name: "대분류" | "중분류", text: string) =>
   panel(page, name).getByRole("row").filter({ hasText: text });
 
-async function closeAlert(page: Page, title: string) {
-  const dialog = page.getByRole("dialog", { name: title });
-  await expect(dialog).toBeVisible();
-  await dialog.getByRole("button", { name: "확인" }).click();
-  await expect(dialog).toBeHidden();
+// 끝난 것은 창이 아니라 짧은 알림으로 알린다. 다음 알림과 섞이지 않게 사라질 때까지 기다린다
+async function expectDone(page: Page, message: string | RegExp) {
+  const notice = page.getByRole("status").filter({ hasText: message });
+  await expect(notice).toBeVisible();
+  await expect(notice).toBeHidden();
 }
 
 // 맨 아래 추가 줄에 치고 [추가]
@@ -65,11 +65,11 @@ test("분류를 추가·수정·순서 바꾸기·삭제하고, 막히는 경우
   const bigB = `${PREFIX}조리`;
   const mid = `${PREFIX}업소용`;
 
-  // 추가: 약어는 대문자로 바뀌고, 끝나면 완료 창이 뜬다
+  // 추가: 약어는 대문자로 바뀌고, 끝나면 짧은 알림이 뜬다
   await addCategory(page, "대분류", bigA, "qa");
-  await closeAlert(page, "추가 완료");
+  await expectDone(page, `"${bigA}" 분류를 추가했습니다.`);
   await addCategory(page, "대분류", bigB, "QB");
-  await closeAlert(page, "추가 완료");
+  await expectDone(page, `"${bigB}" 분류를 추가했습니다.`);
   await expect(row(page, "대분류", bigA)).toContainText("QA");
 
   // 형제와 겹치는 약어는 보내기 전에 막고 입력값은 남긴다
@@ -84,7 +84,7 @@ test("분류를 추가·수정·순서 바꾸기·삭제하고, 막히는 경우
   await expect(page).toHaveURL(/\?big=\d+$/);
   await expect(panel(page, "중분류")).toContainText("중분류가 없습니다.");
   await addCategory(page, "중분류", mid, "UR");
-  await closeAlert(page, "추가 완료");
+  await expectDone(page, `"${mid}" 분류를 추가했습니다.`);
   await expect(row(page, "중분류", mid)).toContainText("QAUR");
 
   // 수정: Enter 로 저장한다
@@ -92,7 +92,7 @@ test("분류를 추가·수정·순서 바꾸기·삭제하고, 막히는 경우
   const editName = panel(page, "중분류").getByLabel("이름").first();
   await editName.fill(`${mid}2`);
   await editName.press("Enter");
-  await closeAlert(page, "저장 완료");
+  await expectDone(page, "저장했습니다.");
   await expect(row(page, "중분류", `${mid}2`)).toBeVisible();
 
   // 순서: 누르면 바로 저장되고 새로 고쳐도 그대로다
@@ -120,7 +120,7 @@ test("분류를 추가·수정·순서 바꾸기·삭제하고, 막히는 경우
   await row(page, "중분류", `${mid}2`).getByRole("button", { name: "삭제" }).click();
   const confirm = page.getByRole("dialog", { name: "분류 삭제" });
   await confirm.getByRole("button", { name: "삭제" }).click();
-  await closeAlert(page, "삭제 완료");
+  await expectDone(page, `"${mid}2" 분류를 삭제했습니다.`);
   await expect(row(page, "중분류", `${mid}2`)).toHaveCount(0);
 });
 

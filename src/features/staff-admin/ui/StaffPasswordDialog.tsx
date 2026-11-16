@@ -5,7 +5,12 @@ import { useForm } from "react-hook-form";
 import type { MemberDto } from "@/entities/member";
 import { toast } from "@/shared/lib";
 import { Dialog } from "@/shared/ui";
-import { AdminButton, AdminFieldError, AdminPasswordInput } from "@/shared/ui/admin";
+import {
+  AdminButton,
+  AdminErrorNotice,
+  AdminFieldError,
+  AdminPasswordInput,
+} from "@/shared/ui/admin";
 import { StaffSchema } from "../model/schema/staffSchema";
 import { useResetStaffPassword } from "../model/useStaffAdminActions";
 
@@ -23,6 +28,7 @@ export default function StaffPasswordDialog({ staff, onClose }: Props) {
     register,
     handleSubmit,
     reset,
+    setError,
     formState: { errors },
   } = useForm<StaffSchema.PasswordFormValues>({
     resolver: zodResolver(StaffSchema.PasswordSchema),
@@ -43,7 +49,8 @@ export default function StaffPasswordDialog({ staff, onClose }: Props) {
           toast("비밀번호를 바꿨습니다.");
           close();
         },
-        onError: (error) => toast(error.message, "error"),
+        // 칸 하나의 오류가 아니면 창 안 맨 아래에 남긴다
+        onError: (error) => setError("root", { message: error.message }),
       },
     );
   };
@@ -89,6 +96,7 @@ export default function StaffPasswordDialog({ staff, onClose }: Props) {
         {errors.passwordConfirm && (
           <AdminFieldError>{errors.passwordConfirm.message}</AdminFieldError>
         )}
+        {errors.root && <AdminErrorNotice className="mt-3">{errors.root.message}</AdminErrorNotice>}
       </form>
     </Dialog>
   );

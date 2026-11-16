@@ -7,6 +7,7 @@ import { cn, formatDate, toast } from "@/shared/lib";
 import { AlertDialog } from "@/shared/ui";
 import {
   AdminButton,
+  AdminErrorNotice,
   AdminPageHeader,
   AdminSelect,
   AdminTable,
@@ -36,8 +37,11 @@ export default function StaffManager({ myId }: Props) {
   const [passwordTarget, setPasswordTarget] = useState<MemberDto.Staff | null>(null);
   const [suspendTarget, setSuspendTarget] = useState<MemberDto.Staff | null>(null);
   const [blocked, setBlocked] = useState(false);
+  // 역할·정지를 바꾸다 서버 오류로 실패하면 표 위에 남긴다
+  const [updateError, setUpdateError] = useState<string | null>(null);
 
   const handleUpdate = (data: Parameters<typeof update>[0], done: string) => {
+    setUpdateError(null);
     update(data, {
       onSuccess: () => toast(done),
       onError: (error) => {
@@ -45,7 +49,7 @@ export default function StaffManager({ myId }: Props) {
           setBlocked(true);
           return;
         }
-        toast(error.message, "error");
+        setUpdateError(error.message);
       },
     });
   };
@@ -159,6 +163,7 @@ export default function StaffManager({ myId }: Props) {
         sub="직원 계정은 지우지 않고 정지합니다."
         action={<AdminButton onClick={() => setAdding(true)}>+ 직원 추가</AdminButton>}
       />
+      {updateError && <AdminErrorNotice className="mb-3">{updateError}</AdminErrorNotice>}
       <AdminTable>
         <table className="w-full table-fixed border-collapse text-[13px]">
           <colgroup>

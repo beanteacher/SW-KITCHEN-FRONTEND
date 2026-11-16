@@ -8,6 +8,7 @@ import { applyServerFieldErrors, toast } from "@/shared/lib";
 import { Dialog } from "@/shared/ui";
 import {
   AdminButton,
+  AdminErrorNotice,
   AdminFieldError,
   AdminInput,
   AdminPasswordInput,
@@ -68,7 +69,10 @@ export default function StaffAddDialog({ open, onClose }: Props) {
           setError("userId", { message: "이미 있는 아이디입니다." }, { shouldFocus: true });
           return;
         }
-        if (applyServerFieldErrors(error, setError) === 0) toast(error.message, "error");
+        // 칸 하나의 오류가 아니면 창 안 맨 아래에 남긴다
+        if (applyServerFieldErrors(error, setError) === 0) {
+          setError("root", { message: error.message });
+        }
       },
     });
   };
@@ -139,6 +143,7 @@ export default function StaffAddDialog({ open, onClose }: Props) {
             aria-invalid={Boolean(errors.passwordConfirm)}
           />
         </Row>
+        {errors.root && <AdminErrorNotice className="mt-3">{errors.root.message}</AdminErrorNotice>}
       </form>
     </Dialog>
   );

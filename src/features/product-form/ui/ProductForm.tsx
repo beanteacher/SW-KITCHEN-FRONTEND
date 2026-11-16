@@ -3,7 +3,7 @@
 import { FormProvider } from "react-hook-form";
 import type { ProductDto } from "@/entities/product";
 import { AlertDialog } from "@/shared/ui";
-import { AdminButton, AdminPageHeader } from "@/shared/ui/admin";
+import { AdminButton, AdminErrorNotice, AdminPageHeader } from "@/shared/ui/admin";
 import { useProductFormActions } from "../model/useProductFormActions";
 import BasicInfoSection from "./BasicInfoSection";
 import DescriptionSection from "./DescriptionSection";
@@ -26,14 +26,15 @@ export default function ProductForm({ product: initialProduct }: Props) {
     originalSalesType,
     hasReserved,
     alert,
-    savedOpen,
+    leaveOpen,
     errorCount,
     isUploading,
     isSaving,
     handleSave,
     handleReload,
     handleLeave,
-    handleCloseSaved,
+    handleConfirmLeave,
+    handleCancelLeave,
   } = useProductFormActions(initialProduct);
 
   return (
@@ -51,17 +52,18 @@ export default function ProductForm({ product: initialProduct }: Props) {
           }
         />
         {alert && (
-          <div
-            role="alert"
-            className="mt-4 border border-[#f3b4b5] bg-[#fff5f5] px-4 py-3 leading-[1.6] text-[#b42318]"
+          <AdminErrorNotice
+            className="mt-4"
+            action={
+              alert.reload && (
+                <AdminButton size="compact" variant="outline" onClick={handleReload}>
+                  다시 불러오기
+                </AdminButton>
+              )
+            }
           >
             {alert.message}
-            {alert.reload && (
-              <AdminButton size="compact" variant="outline" className="ml-2" onClick={handleReload}>
-                다시 불러오기
-              </AdminButton>
-            )}
-          </div>
+          </AdminErrorNotice>
         )}
         <div key={formKey}>
           <BasicInfoSection originalSalesType={originalSalesType} hasReserved={hasReserved} />
@@ -92,8 +94,15 @@ export default function ProductForm({ product: initialProduct }: Props) {
           </AdminButton>
         </div>
       </form>
-      <AlertDialog open={savedOpen} kind="success" title="저장 완료" onClose={handleCloseSaved}>
-        저장되었습니다.
+      <AlertDialog
+        open={leaveOpen}
+        kind="confirm"
+        title="저장하지 않고 나갈까요?"
+        confirmLabel="나가기"
+        onClose={handleCancelLeave}
+        onConfirm={handleConfirmLeave}
+      >
+        저장하지 않은 내용은 사라집니다.
       </AlertDialog>
     </FormProvider>
   );

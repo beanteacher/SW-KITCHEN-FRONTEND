@@ -4,11 +4,11 @@ import type { ReactNode } from "react";
 import AdminButton from "./admin/AdminButton";
 import Dialog from "./Dialog";
 
-type AlertKind = "warning" | "success" | "notice" | "confirm";
+// 끝난 것(성공)은 창이 아니라 토스트로 알린다 (frontend-feedback 규칙). 그래서 성공 모양은 두지 않는다
+type AlertKind = "warning" | "notice" | "confirm";
 
 const TITLE_CLASS: Record<AlertKind, string> = {
   warning: "text-danger",
-  success: "text-success",
   notice: "text-ink",
   confirm: "text-ink",
 };
@@ -26,7 +26,7 @@ interface Props {
   extraAction?: { label: string; onClick: () => void };
 }
 
-// 관리자 화면의 알림 창. 경고·성공·안내는 [확인] 하나, 확인 요청은 [취소] [삭제]
+// 알림 창. 막힘(경고)·안내는 [확인] 하나, 확인 요청은 [취소] [삭제]
 export default function AlertDialog({
   open,
   kind,

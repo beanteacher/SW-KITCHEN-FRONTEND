@@ -13,7 +13,9 @@ export default function ProductEditForm() {
   // 주소의 id. 숫자가 아니면 없는 제품으로 본다
   const id = Number(useParams<{ id: string }>().id);
   const validId = Number.isInteger(id) && id > 0;
-  const { data, error, isPending, refetch } = useAdminProduct(validId ? id : null);
+  const { data, error, isPending, isFetchedAfterMount, refetch } = useAdminProduct(
+    validId ? id : null,
+  );
 
   const notFound = !validId || (error instanceof ApiError && error.status === 404);
   if (notFound) {
@@ -35,7 +37,8 @@ export default function ProductEditForm() {
     );
   }
 
-  if (isPending) {
+  // 전에 받아 둔 값이 있어도 이번에 새로 받을 때까지 기다린다. 폼은 처음 받은 값으로만 채워져서, 옛 값으로 먼저 채우면 바뀌지 않는다
+  if (isPending || !isFetchedAfterMount) {
     return (
       <>
         <AdminPageHeader title="제품 수정" sub={`#${id}`} tight />

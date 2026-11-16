@@ -77,7 +77,7 @@ export default function CategoryPanel({
 
   const handleCreate = async (values: CategorySchema.CreateFormValues) => {
     await create({ parentId: parent?.id ?? null, ...values });
-    onDone("추가 완료", `"${values.name}" 분류가 추가되었습니다.`);
+    onDone(`"${values.name}" 분류를 추가했습니다.`);
   };
 
   // 바뀐 값만 보낸다. 잠긴 약어는 칸이 막혀 있어 늘 그대로다
@@ -87,7 +87,7 @@ export default function CategoryPanel({
       if (values.abbr !== category.abbr) data.abbr = values.abbr;
       await edit({ id: category.id, data });
       onEdit(null);
-      onDone("저장 완료", "저장되었습니다.");
+      onDone("저장했습니다.");
     };
 
   // 대분류 줄은 아무 데나 눌러도 고른다. 줄 안의 버튼·입력칸은 제 할 일만 한다
