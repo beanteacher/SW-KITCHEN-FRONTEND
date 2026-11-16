@@ -42,12 +42,17 @@ export function loadPortOne() {
   return loading;
 }
 
+// 인증 건 번호. KCP 는 40자 이내 영문·숫자만 받는다 (길면 "필수값 포멧 오류(ordr_idxx)" 로 창이 안 열린다)
+export function newIdentityVerificationId() {
+  return `iv${crypto.randomUUID().replaceAll("-", "")}`;
+}
+
 // 업체 창을 열어 본인인증을 받는다. 마치면 인증 건 번호, 창을 닫거나 실패하면 null
 // ponytail: 휴대폰 브라우저는 창 대신 업체 화면으로 넘어갔다 돌아오는데(redirectUrl), 그 돌아올 화면은 아직 없다. 모바일 화면을 만들 때 더한다
 export async function requestIdentityVerification(): Promise<string | null> {
   try {
     const portOne = await loadPortOne();
-    const identityVerificationId = `identity-verification-${crypto.randomUUID()}`;
+    const identityVerificationId = newIdentityVerificationId();
     const response = await portOne.requestIdentityVerification({
       storeId: env.portoneStoreId,
       identityVerificationId,
