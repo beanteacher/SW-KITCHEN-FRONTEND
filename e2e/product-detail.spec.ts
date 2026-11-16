@@ -83,6 +83,6 @@ test.describe("없는 제품", () => {
     await expect(page.getByText("찾는 제품이 없습니다")).toBeVisible();
     await expect(page.locator('head meta[name="robots"]')).toHaveAttribute("content", "noindex");
     await page.getByRole("link", { name: "신제품 보기" }).click();
-    await expect(page).toHaveURL("/product/new");
+    await expect(page).toHaveURL(/\/product\/new$/);
   });
 });

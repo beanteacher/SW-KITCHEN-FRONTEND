@@ -39,7 +39,7 @@ test("제품 관리 목록에서 찾고, 조건을 주소에 남기고, 수정 �
   await expect(page.getByLabel("검색어")).toHaveValue("");
 
   await row.getByRole("link", { name: "수정" }).click();
-  await expect(page).toHaveURL(`/admin/product/${first.id}/edit`);
+  await expect(page).toHaveURL(new RegExp(`/admin/product/${first.id}/edit$`));
   await expect(page.getByRole("heading", { name: "제품 수정" })).toBeVisible();
 });
 

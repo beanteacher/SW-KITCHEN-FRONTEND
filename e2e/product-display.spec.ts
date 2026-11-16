@@ -145,7 +145,7 @@ test.describe("관리 화면", () => {
     await page.goto(`/admin/product?keyword=${encodeURIComponent(NAME_PREFIX)}`);
 
     await page.getByRole("link", { name: `${NAME_PREFIX} 신제품 옵션 하나` }).click();
-    await expect(page).toHaveURL(`/admin/product/${seeded.newSingle}/edit`);
+    await expect(page).toHaveURL(new RegExp(`/admin/product/${seeded.newSingle}/edit$`));
   });
 
   test("고른 제품을 묻고 지우면 목록에서 빠지고, 고르지 않으면 선택 삭제를 누를 수 없다", async ({

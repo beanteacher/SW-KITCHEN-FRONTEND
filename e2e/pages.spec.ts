@@ -5,7 +5,10 @@ const PUBLIC_PAGES = [
   ["/product/new", "신제품"],
   ["/product/stock", "재고·중고품"],
   ["/search?keyword=냉장고", "‘냉장고’ 검색 결과"],
-  ["/login", "로그인"],
+  ["/login", "로그인/회원가입"],
+  ["/signup", "성원종합주방 회원가입"],
+  ["/find/id", "아이디 찾기"],
+  ["/find/password", "비밀번호 재설정"],
 ] as const;
 
 for (const [path, heading] of PUBLIC_PAGES) {
