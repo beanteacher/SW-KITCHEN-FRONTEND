@@ -48,6 +48,8 @@ export default function OptionSection({ isEdit }: Props) {
   const salesType = useWatch({ control, name: "salesType" });
   const options = useWatch({ control, name: "options" });
   const [bulk, setBulk] = useState(EMPTY_BULK);
+  // 빈 채로 [적용]을 누르면 줄 안에 남긴다. 칸을 채우면 지운다
+  const [bulkError, setBulkError] = useState(false);
   // 추가 이미지를 펼친 줄 (useFieldArray 의 줄 key)
   const [openRows, setOpenRows] = useState<ReadonlySet<string>>(new Set());
 
@@ -60,7 +62,7 @@ export default function OptionSection({ isEdit }: Props) {
   const handleApply = () => {
     const filled = bulkFields.filter((field) => bulk[field.key]);
     if (filled.length === 0) {
-      toast("넣을 값을 먼저 입력해 주세요.", "error");
+      setBulkError(true);
       return;
     }
     let applied = 0;
@@ -106,7 +108,10 @@ export default function OptionSection({ isEdit }: Props) {
             {label}
             <DigitsInput
               value={bulk[key]}
-              onChange={(digits) => setBulk((prev) => ({ ...prev, [key]: digits }))}
+              onChange={(digits) => {
+                setBulkError(false);
+                setBulk((prev) => ({ ...prev, [key]: digits }));
+              }}
               maxLength={maxLength}
               money={key === "listPrice"}
               className={key === "listPrice" ? "w-[100px]" : "w-16"}
@@ -117,7 +122,13 @@ export default function OptionSection({ isEdit }: Props) {
         <AdminButton size="compact" onClick={handleApply}>
           적용
         </AdminButton>
-        <span className="text-xs text-admin-muted">채운 칸만 모든 옵션에 들어갑니다</span>
+        {bulkError ? (
+          <span role="alert" className="text-xs text-admin-error">
+            넣을 값을 먼저 입력해 주세요.
+          </span>
+        ) : (
+          <span className="text-xs text-admin-muted">채운 칸만 모든 옵션에 들어갑니다</span>
+        )}
       </div>
       {/* 칸 너비는 고정이고, 본문이 좁으면 옵션 표만 가로로 스크롤된다 */}
       <AdminTable className="overflow-x-auto">

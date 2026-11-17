@@ -1,8 +1,8 @@
 import type { CategoryDto } from "@/entities/category";
 
-// 관리자 알림 창 하나. confirm 은 [취소] [삭제]
+// 관리자 알림 창 하나. 막힘은 [확인], confirm 은 [취소] [삭제]. 끝난 것은 창이 아니라 토스트로 알린다
 export interface AlertState {
-  kind: "warning" | "success" | "confirm";
+  kind: "warning" | "confirm";
   title: string;
   message: string;
   onConfirm?: () => void;
@@ -25,7 +25,8 @@ export interface CategoryPanelHandlers {
   onDelete: (category: CategoryDto.AdminTree) => void;
   // 수량 숫자를 누르면 그 분류의 제품을 옆 패널에 연다. 패널이 없는 화면이면 비어 숫자로만 보인다
   onShowProducts?: (category: CategoryDto.AdminTree) => void;
-  onDone: (title: string, message: string) => void;
+  // 추가·저장이 끝났을 때 짧은 알림
+  onDone: (message: string) => void;
 }
 
 export interface CategoryAdminPageReturn {
@@ -34,6 +35,7 @@ export interface CategoryAdminPageReturn {
   isLoading: boolean;
   isError: boolean;
   alert: AlertState | null;
+  actionError: string | null;
   productsTarget: ProductsTarget | null;
   panelHandlers: CategoryPanelHandlers;
   handleRetry: () => void;

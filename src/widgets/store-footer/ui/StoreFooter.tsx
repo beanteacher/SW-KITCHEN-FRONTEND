@@ -1,3 +1,5 @@
+import { CUSTOMER_CENTER } from "@/shared/config";
+
 // ponytail: 사업자 정보는 아직 가짜 값이다. 실제 값이 정해지면 바꾼다
 export default function StoreFooter() {
   return (
@@ -7,7 +9,9 @@ export default function StoreFooter() {
           <strong className="font-bold">성원종합주방</strong> · 대표자 ○○○ · 사업자등록번호
           000-00-00000 · 통신판매업 신고 제0000-서울○○-0000호
         </p>
-        <p>주소 서울시 ○○구 ○○로 00 · 고객센터 02-000-0000 (평일 09:00~18:00)</p>
+        <p>
+          주소 서울시 ○○구 ○○로 00 · 고객센터 {CUSTOMER_CENTER.phone} ({CUSTOMER_CENTER.hours})
+        </p>
       </div>
     </footer>
   );

@@ -5,7 +5,7 @@ import type { KeyboardEvent, ReactNode } from "react";
 import { useForm } from "react-hook-form";
 import type { CategoryDto } from "@/entities/category";
 import { toApiError } from "@/shared/api";
-import { cn, toast } from "@/shared/lib";
+import { cn } from "@/shared/lib";
 import { AdminButton, AdminFieldError, AdminInput, AdminTd } from "@/shared/ui/admin";
 import { getDuplicateAbbrMessage, getServerFieldErrors, normalizeAbbr } from "../lib/categoryRules";
 import { CategorySchema } from "../model/schema/categorySchema";
@@ -62,7 +62,8 @@ export default function CategoryInputRow({
     } catch (error) {
       const fieldErrors = getServerFieldErrors(error);
       if (!fieldErrors) {
-        toast(toApiError(error).message, "error");
+        // 칸 하나의 오류가 아니면 이 줄 아래에 남긴다
+        setError("root", { message: toApiError(error).message });
         return;
       }
       if (fieldErrors.name) setError("name", { message: fieldErrors.name }, { shouldFocus: true });
@@ -96,6 +97,7 @@ export default function CategoryInputRow({
           onKeyDown={handleKeyDown}
         />
         {errors.name && <AdminFieldError>{errors.name.message}</AdminFieldError>}
+        {errors.root && <AdminFieldError>{errors.root.message}</AdminFieldError>}
       </AdminTd>
       <AdminTd>
         <AdminInput

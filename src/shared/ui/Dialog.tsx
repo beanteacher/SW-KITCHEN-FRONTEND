@@ -24,6 +24,13 @@ export default function Dialog({ open, onClose, title, titleClassName, children,
     if (!open && dialog.open) dialog.close();
   }, [open]);
 
+  // Next 는 떠난 화면을 지우지 않고 숨겨 둔다. 열린 창은 숨겨져도 화면 전체를 막으므로 숨길 때 닫는다
+  // 다시 보일 때는 위 효과가 다시 돌아 open 이면 다시 연다
+  useEffect(() => {
+    const dialog = ref.current;
+    return () => dialog?.close();
+  }, []);
+
   return (
     <dialog
       ref={ref}

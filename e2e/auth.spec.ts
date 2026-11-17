@@ -59,11 +59,11 @@ test("로그아웃하면 쿠키가 지워지고, 관리 화면은 로그인 화�
   await login(page);
   await page.goto("/product/new");
 
-  // 로그아웃 뒤 첫 화면을 다시 불러온다. 그 응답이 오기 전에 다른 화면으로 가면 브라우저가 요청을 끊는다
+  // 로그아웃하면 페이지를 통째로 새로 불러온다. 그 응답이 오기 전에 다른 화면으로 가면 브라우저가 요청을 끊는다
   const reloaded = page.waitForResponse(
     (response) =>
       new URL(response.url()).pathname === "/product/new" &&
-      response.request().headers()["rsc"] === "1",
+      response.request().resourceType() === "document",
   );
   await page.getByRole("banner").getByRole("button", { name: "로그아웃" }).click();
   await reloaded;

@@ -2,15 +2,19 @@ export * as AuthDto from "./authDto";
 
 export type Role = "CUSTOMER" | "STAFF" | "ADMIN";
 
+// 소셜로만 가입한 고객은 userId 가 없다
 export interface Me {
   id: number;
-  userId?: string;
+  userId?: string | null;
+  name?: string;
   role?: Role;
 }
 
 export interface LoginForm {
   userId: string;
   password: string;
+  // 5번 틀린 아이디만 필요하다
+  captchaToken?: string;
 }
 
 export interface LoginResult extends Me {

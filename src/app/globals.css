@@ -14,7 +14,7 @@
   --color-faint: #b5bcc4;
   --color-picked: #eef3fc;
   --color-row-hover: #fafbfc;
-  /* 관리자 화면 (관리 시안 세 개 공통 값) */
+  /* 관리자 화면 공통 값 */
   --color-admin-bg: #f1f1f1; /* 본문 바탕 */
   --color-admin-text: #333333; /* 버튼·머리 칸·메뉴 글자 */
   --color-admin-sub: #666666; /* 빈 표·상태 안내 */
