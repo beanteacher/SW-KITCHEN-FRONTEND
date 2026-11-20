@@ -9,7 +9,7 @@ import {
   useVerifyIdentity,
 } from "@/entities/member";
 import { ApiError } from "@/shared/api";
-import { cn, formatDate, formatPhone, toast } from "@/shared/lib";
+import { cn, formatStoreDate, formatPhone, toast } from "@/shared/lib";
 import type { MyPageApi } from "../api/myPageApi";
 import { useChangeMarketing, useChangePhone } from "../model/useMyPageQueries";
 import InfoRow, { InfoNote, ROW_BUTTON_CLASS } from "./InfoRow";
@@ -45,7 +45,7 @@ export default function MyInfo({ me, renderPasswordChange }: Props) {
       onSuccess: () =>
         setMarketingMessage({
           tone: "ok",
-          text: `성원종합주방 마케팅 정보 수신 ${agreed ? "동의" : "동의 철회"}가 ${formatDate(new Date().toISOString())}에 처리되었습니다.`,
+          text: `성원종합주방 마케팅 정보 수신 ${agreed ? "동의" : "동의 철회"}가 ${formatStoreDate(new Date().toISOString())}에 처리되었습니다.`,
         }),
       onError: (error) => setMarketingMessage({ tone: "error", text: error.message }),
     });
@@ -130,7 +130,7 @@ export default function MyInfo({ me, renderPasswordChange }: Props) {
               <RowMessage tone={marketingMessage.tone}>{marketingMessage.text}</RowMessage>
             )}
           </div>
-          <InfoRow label="가입일">{me.createdAt && formatDate(me.createdAt)}</InfoRow>
+          <InfoRow label="가입일">{me.createdAt && formatStoreDate(me.createdAt)}</InfoRow>
         </dl>
       </section>
 

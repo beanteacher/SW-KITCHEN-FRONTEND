@@ -1,5 +1,5 @@
 import { SOCIAL_PROVIDER_LABEL, SocialBadge } from "@/entities/member";
-import { formatDate } from "@/shared/lib";
+import { formatStoreDate } from "@/shared/lib";
 import type { FoundAccount } from "../api/findAccountApi";
 
 // 찾은 계정: 아이디 전체(18px 굵게, 가리지 않음) + 연결된 소셜 + 가입일
@@ -20,7 +20,7 @@ export default function FoundCard({ account }: { account: FoundAccount }) {
         )}
       </div>
       {account.createdAt && (
-        <p className="mt-1.5 text-[13px] text-[#888]">{formatDate(account.createdAt)} 가입</p>
+        <p className="mt-1.5 text-[13px] text-[#888]">{formatStoreDate(account.createdAt)} 가입</p>
       )}
     </div>
   );
