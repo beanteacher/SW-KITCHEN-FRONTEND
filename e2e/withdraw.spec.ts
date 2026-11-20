@@ -95,7 +95,7 @@ test.describe("마케팅 수신", () => {
     await marketing.click();
     await expect(
       page.getByRole("status").filter({ hasText: "성원종합주방 마케팅 정보 수신 동의가" }),
-    ).toContainText(/\d{4}-\d{2}-\d{2}에 처리되었습니다/);
+    ).toContainText(/\d{4}\.\d{2}\.\d{2}에 처리되었습니다/);
     // 4초 뒤에도 남아 있다 (사라지는 알림이 아니다)
     await page.waitForTimeout(4000);
     await expect(page.getByText(/마케팅 정보 수신 동의가/)).toBeVisible();

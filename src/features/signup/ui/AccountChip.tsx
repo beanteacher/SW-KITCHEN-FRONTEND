@@ -1,5 +1,5 @@
 import { type MemberDto, SocialBadge } from "@/entities/member";
-import { formatDate } from "@/shared/lib";
+import { formatStoreDate } from "@/shared/lib";
 
 // 이미 있는 계정: 가린 아이디(소셜로만 가입했으면 "카카오로 가입") + 연결된 소셜 + 가입일
 export default function AccountChip({ account }: { account: MemberDto.ExistingAccount }) {
@@ -13,7 +13,7 @@ export default function AccountChip({ account }: { account: MemberDto.ExistingAc
         ))}
       {account.createdAt && (
         <small className="text-xs font-normal text-placeholder">
-          {formatDate(account.createdAt)} 가입
+          {formatStoreDate(account.createdAt)} 가입
         </small>
       )}
     </div>
