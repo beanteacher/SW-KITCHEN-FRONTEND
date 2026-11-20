@@ -6,7 +6,7 @@ export interface AlertState {
   title: string;
   message: string;
   onConfirm?: () => void;
-  // 막힘 창의 [제품 보기]처럼 [확인] 앞에 붙는 버튼
+  // 막힘 창의 [제품 조회]처럼 [확인] 앞에 붙는 버튼
   extraAction?: { label: string; onClick: () => void };
 }
 

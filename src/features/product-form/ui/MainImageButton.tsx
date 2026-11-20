@@ -49,7 +49,7 @@ export default function MainImageButton({ index, disabled }: Props) {
     <>
       <button
         type="button"
-        aria-label={`${index + 1}번 옵션 대표 이미지 ${image ? "바꾸기" : "올리기"}`}
+        aria-label={`${index + 1}번 옵션 대표 이미지 ${image ? "변경" : "올리기"}`}
         disabled={disabled || uploading}
         onClick={() => fileRef.current?.click()}
         className={cn(

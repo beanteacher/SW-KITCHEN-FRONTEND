@@ -58,7 +58,7 @@ export function useCategoryAdminActions(): CategoryAdminPageReturn {
   };
 
   // 지울 수 없는 이유를 먼저 알려 주고, 지울 수 있으면 한 번 더 묻는다
-  // 제품 때문에 막혔으면 [제품 보기]로 옆 패널에서 바로 지울 수 있게 한다
+  // 제품 때문에 막혔으면 [제품 조회]로 옆 패널에서 바로 지울 수 있게 한다
   const handleDelete = (category: CategoryDto.AdminTree) => {
     setActionError(null);
     const blockReason = getDeleteBlockReason(category);
@@ -70,15 +70,15 @@ export function useCategoryAdminActions(): CategoryAdminPageReturn {
         title: "삭제 불가",
         message: blockReason,
         extraAction: blockedByProducts
-          ? { label: "제품 보기", onClick: () => handleShowProducts(category) }
+          ? { label: "제품 조회", onClick: () => handleShowProducts(category) }
           : undefined,
       });
       return;
     }
     setAlert({
       kind: "confirm",
-      title: "분류 삭제",
-      message: `"${category.name}" 분류를 삭제할까요?`,
+      title: "분류를 삭제할까요?",
+      message: `"${category.name}" 분류를 삭제합니다. 되돌릴 수 없습니다.`,
       onConfirm: () => {
         setAlert(null);
         remove(category.id, {

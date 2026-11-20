@@ -22,7 +22,7 @@ interface Props {
   // confirm 일 때 [삭제] 를 누르면 부른다
   onConfirm?: () => void;
   confirmLabel?: string;
-  // [확인] 앞에 붙는 버튼 하나 (예: 막힘 창의 [제품 보기])
+  // [확인] 앞에 붙는 버튼 하나 (예: 막힘 창의 [제품 조회])
   extraAction?: { label: string; onClick: () => void };
 }
 

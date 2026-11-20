@@ -118,7 +118,7 @@ function ProductRows({ product, picked, readOnly, onTogglePick }: RowProps) {
         <AdminTd rowSpan={span}>
           <Link
             href={`/admin/product/${product.id}/edit`}
-            className={adminButtonClass({ variant: "outline", size: "xs" })}
+            className={adminButtonClass({ variant: "edit", size: "xs" })}
           >
             수정
           </Link>
