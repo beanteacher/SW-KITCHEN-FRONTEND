@@ -2,12 +2,15 @@
 
 import { cn, useToastStore } from "@/shared/lib";
 
-// 앱 전체에 한 번만 붙인다
+// 앱 전체에 한 번만 붙인다. 화면 아래 가운데에 뜬다 (시안과 같은 자리)
 export default function Toaster() {
   const items = useToastStore((state) => state.items);
 
   return (
-    <div aria-live="polite" className="fixed top-4 right-4 z-50 flex flex-col gap-2">
+    <div
+      aria-live="polite"
+      className="fixed bottom-10 left-1/2 z-50 flex -translate-x-1/2 flex-col items-center gap-2"
+    >
       {items.map((item) => (
         <div
           key={item.id}
