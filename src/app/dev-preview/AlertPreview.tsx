@@ -16,7 +16,10 @@ const SAMPLES: Record<Kind, { title: string; body: string }> = {
     title: "비밀번호 변경 권장",
     body: "처음 받은 비밀번호를 쓰고 있습니다. 비밀번호를 바꿔 주세요.",
   },
-  confirm: { title: "분류 삭제", body: '"쇼케이스" 분류를 삭제할까요?' },
+  confirm: {
+    title: "분류를 삭제할까요?",
+    body: '"쇼케이스" 분류를 삭제합니다. 되돌릴 수 없습니다.',
+  },
 };
 
 export default function AlertPreview() {

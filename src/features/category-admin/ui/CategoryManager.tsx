@@ -42,7 +42,7 @@ export default function CategoryManager({ renderProductsPanel }: Props) {
     handleCloseProducts,
     actionError,
   } = useCategoryAdminActions();
-  // 패널이 없으면 수량은 숫자로만, 막힘 창에는 [제품 보기]를 두지 않는다
+  // 패널이 없으면 수량은 숫자로만, 막힘 창에는 [제품 조회]를 두지 않는다
   const handlers = renderProductsPanel
     ? panelHandlers
     : { ...panelHandlers, onShowProducts: undefined };

@@ -248,7 +248,7 @@ export default function ResetPasswordFlow() {
                   className={standaloneButtonClass()}
                   disabled={!ready || resetting}
                 >
-                  비밀번호 바꾸기
+                  비밀번호 변경
                 </button>
               )}
             </div>

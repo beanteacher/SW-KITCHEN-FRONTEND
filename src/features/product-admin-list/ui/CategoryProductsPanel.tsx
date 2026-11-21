@@ -29,12 +29,12 @@ export default function CategoryProductsPanel({ target, onClose }: Props) {
     <AdminSidePanel
       open={target !== null}
       onClose={onClose}
-      title={target ? `제품 — ${target.name}` : ""}
+      title={target ? `${target.name} 제품` : ""}
       description={
         target &&
         (target.parentName
-          ? `${target.parentName} > ${target.name} 에 연결된 제품입니다. 모두 삭제하면 이 분류를 삭제할 수 있습니다.`
-          : `${target.name} 아래 모든 중분류에 연결된 제품입니다.`)
+          ? "모두 삭제하면 이 분류를 삭제할 수 있습니다."
+          : "아래 모든 중분류의 제품입니다.")
       }
     >
       {target && (

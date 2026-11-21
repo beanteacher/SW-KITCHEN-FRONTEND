@@ -5,6 +5,7 @@
   --color-line: #dfe4eb;
   --color-cell: #dddddd;
   --color-danger: #c62f35;
+  --color-edit: #1a56c4; /* 관리자 [수정] 버튼·링크 파랑 */
   --color-success: #1e7b3c;
   /* 쇼핑몰 입력칸: 안내 글자, 오류 빨강 (무신사 실측) */
   --color-placeholder: #8a8a8a;

@@ -41,8 +41,8 @@ function ProductCount({
         size="icon"
         variant="outline"
         className="size-6 hover:border-[#2357c6] hover:bg-picked hover:text-[#2357c6]"
-        title="제품 보기"
-        aria-label={`${category.name} 제품 ${count}개 보기`}
+        title="제품 조회"
+        aria-label={`${category.name} 제품 ${count}개 조회`}
         disabled={disabled}
         onClick={(event) => {
           // Safari 는 눌러도 버튼에 초점을 주지 않아, 패널을 닫은 뒤 돌아올 자리가 없다. 직접 준다
@@ -229,7 +229,7 @@ export default function CategoryPanel({
                   <AdminTd className="whitespace-nowrap">
                     <AdminButton
                       size="xs"
-                      variant="outline"
+                      variant="edit"
                       disabled={isEditing}
                       onClick={() => onEdit(category.id)}
                     >
@@ -237,7 +237,7 @@ export default function CategoryPanel({
                     </AdminButton>
                     <AdminButton
                       size="xs"
-                      variant="outline"
+                      variant="dangerOutline"
                       className="ml-1"
                       disabled={isEditing}
                       onClick={() => onDelete(category)}

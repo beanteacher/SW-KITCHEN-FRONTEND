@@ -24,7 +24,7 @@ export default function ProductEditForm() {
         message="찾는 제품이 없습니다."
         action={
           <Link href="/admin/product" className={adminButtonClass({ variant: "outline" })}>
-            제품 목록으로
+            ← 목록
           </Link>
         }
       />

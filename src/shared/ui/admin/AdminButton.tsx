@@ -4,7 +4,13 @@ import { cn } from "@/shared/lib";
 const VARIANT = {
   primary: "border border-ink bg-ink text-white hover:bg-ink/90",
   outline: "border border-admin-border bg-white text-admin-text hover:bg-gray-50",
+  // 값 하나를 바꾸는 창을 여는 [{무엇} 변경]. 옆의 [수정]·[조회]와 색으로 나뉜다
+  change: "border border-admin-head-line bg-admin-head-line text-admin-text hover:bg-[#d9dde2]",
   danger: "border border-danger bg-danger text-white hover:bg-danger/90",
+  // 표 줄의 [수정]. 옆의 [삭제]·[조회]와 색으로 나뉜다
+  edit: "border border-edit bg-white text-edit hover:bg-blue-50",
+  // 표 줄·화면 위의 [삭제]. 묻는 창의 실행 버튼만 채운 빨강(danger)
+  dangerOutline: "border border-danger bg-white text-danger hover:bg-red-50",
 };
 
 // 모서리 2. sm 은 화면 버튼(높이 32), compact 는 표 아래 도구 버튼(높이 26, 예: [+ 항목 추가]),

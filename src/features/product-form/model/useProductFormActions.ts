@@ -48,7 +48,7 @@ export function useProductFormActions(initialProduct?: ProductDto.AdminDetail) {
   // 다시 채울 때 올려 구역 안 화면 상태(고른 대분류, 펼친 줄 등)도 새로 시작한다
   const [formKey, setFormKey] = useState(0);
   const [alert, setAlert] = useState<SaveAlert | null>(null);
-  // [취소]·[목록으로]를 눌렀는데 고친 게 있으면 묻는 창
+  // [취소]·[← 목록]을 눌렀는데 고친 게 있으면 묻는 창
   const [leaveOpen, setLeaveOpen] = useState(false);
 
   const form = useForm<FormValues>({
@@ -140,7 +140,7 @@ export function useProductFormActions(initialProduct?: ProductDto.AdminDetail) {
     }
   };
 
-  // ponytail: [취소]·[목록으로] 만 확인을 띄운다. 왼쪽 메뉴 링크로 나가는 것은 아직 막지 않는다
+  // ponytail: [취소]·[← 목록] 만 확인을 띄운다. 왼쪽 메뉴 링크로 나가는 것은 아직 막지 않는다
   // ponytail: 관리 목록의 검색 조건은 아직 이어받지 않는다. 관리 목록 화면을 만들 때 붙인다
   const handleLeave = () => {
     if (isDirty) {

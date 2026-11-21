@@ -47,7 +47,7 @@ export default function AdminPasswordChangeForm({ userId }: Props) {
             setError("currentPassword", { message: error.message }, { shouldFocus: true });
             return;
           }
-          // 칸 하나의 오류가 아니면 [비밀번호 바꾸기] 위에 남긴다
+          // 칸 하나의 오류가 아니면 [비밀번호 변경] 위에 남긴다
           setError("root", { message: error.message });
         },
       },
@@ -97,7 +97,7 @@ export default function AdminPasswordChangeForm({ userId }: Props) {
       {errors.root && <AdminErrorNotice className="mt-3">{errors.root.message}</AdminErrorNotice>}
       <div className="mt-3.5 flex justify-center">
         <AdminButton type="submit" className="h-9 min-w-[120px]" disabled={isPending}>
-          비밀번호 바꾸기
+          비밀번호 변경
         </AdminButton>
       </div>
     </form>

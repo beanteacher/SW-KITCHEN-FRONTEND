@@ -63,10 +63,10 @@ export function useProductListBody(params: ProductDto.AdminSearchParams) {
 
     setAlert({
       kind: "confirm",
-      title: "제품 삭제",
+      title: "제품을 삭제할까요?",
       message: (
         <>
-          제품 {targets.length}개를 삭제할까요? 옵션·이미지도 함께 지워지고 되돌릴 수 없습니다.
+          제품 {targets.length}개를 삭제합니다. 옵션·이미지도 함께 지워지고 되돌릴 수 없습니다.
           <NameList names={names} />
         </>
       ),

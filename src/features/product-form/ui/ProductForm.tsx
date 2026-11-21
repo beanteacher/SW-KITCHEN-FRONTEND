@@ -47,7 +47,7 @@ export default function ProductForm({ product: initialProduct }: Props) {
           tight
           action={
             <AdminButton variant="outline" onClick={handleLeave}>
-              목록으로
+              ← 목록
             </AdminButton>
           }
         />

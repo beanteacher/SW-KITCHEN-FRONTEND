@@ -119,7 +119,7 @@ export default function CustomerPasswordChangeForm({ onDone, onCancel }: Props) 
           className={cn(standaloneButtonClass(), "w-auto px-5")}
           disabled={!ready || isPending}
         >
-          비밀번호 바꾸기
+          비밀번호 변경
         </button>
       </div>
     </form>

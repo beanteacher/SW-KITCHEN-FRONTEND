@@ -120,11 +120,11 @@ export default function StaffManager({ myId }: Props) {
             ) : (
               <span className="inline-flex gap-1">
                 <AdminButton
-                  variant="outline"
+                  variant="change"
                   size="compact"
                   onClick={() => setPasswordTarget(staff)}
                 >
-                  비밀번호 변경하기
+                  비밀번호 변경
                 </AdminButton>
                 {suspended ? (
                   <AdminButton
@@ -214,7 +214,7 @@ export default function StaffManager({ myId }: Props) {
       <AlertDialog
         open={blocked}
         kind="warning"
-        title="바꿀 수 없음"
+        title="변경 불가"
         onClose={() => setBlocked(false)}
       >
         자기 계정은 정지하거나 역할을 바꿀 수 없습니다.

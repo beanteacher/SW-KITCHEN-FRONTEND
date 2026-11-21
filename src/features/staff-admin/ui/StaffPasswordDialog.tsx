@@ -59,14 +59,14 @@ export default function StaffPasswordDialog({ staff, onClose }: Props) {
     <Dialog
       open={staff !== null}
       onClose={close}
-      title="비밀번호 변경하기"
+      title="비밀번호 변경"
       actions={
         <>
           <AdminButton variant="outline" onClick={close}>
             취소
           </AdminButton>
           <AdminButton type="submit" form={FORM_ID} disabled={isPending}>
-            변경하기
+            변경
           </AdminButton>
         </>
       }

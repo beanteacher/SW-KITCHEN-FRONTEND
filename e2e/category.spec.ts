@@ -118,7 +118,7 @@ test("분류를 추가·수정·순서 바꾸기·삭제하고, 막히는 경우
 
   // 지울 수 있으면 한 번 더 묻고 지운다
   await row(page, "중분류", `${mid}2`).getByRole("button", { name: "삭제" }).click();
-  const confirm = page.getByRole("dialog", { name: "분류 삭제" });
+  const confirm = page.getByRole("dialog", { name: "분류를 삭제할까요?" });
   await confirm.getByRole("button", { name: "삭제" }).click();
   await expectDone(page, `"${mid}2" 분류를 삭제했습니다.`);
   await expect(row(page, "중분류", `${mid}2`)).toHaveCount(0);
